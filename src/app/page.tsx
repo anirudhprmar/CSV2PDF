@@ -1,103 +1,70 @@
-import { headers } from "next/headers";
+"use client";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { Button } from "~/components/ui/button";
 
-import { LatestPost } from "~/app/_components/post";
-import { auth } from "~/server/better-auth";
-import { getSession } from "~/server/better-auth/server";
-import { api, HydrateClient } from "~/trpc/server";
+export default function Page() {
 
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
-  const session = await getSession();
-
-  if (session) {
-    void api.post.getLatest.prefetch();
-  }
-
-  return (
-    <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/usage/first-steps"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">First Steps →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to set up your
-                database and authentication.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://create.t3.gg/en/introduction"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Documentation →</h3>
-              <div className="text-lg">
-                Learn more about Create T3 App, the libraries it uses, and how
-                to deploy it.
-              </div>
+    return (
+    <div className="min-h-full w-full">
+      <header className="w-full">
+        <nav className="flex items-center justify-around p-5">
+          <div className="font-bold text-xl">CSV Viewer & Converter</div>
+          <div className="flex items-center justify-center gap-2 text-md">
+            <ul className="flex items-center justify-center gap-2 text-muted-foreground">
+              <li className="hover:text-foreground cursor-pointer transition-colors">Demo</li>
+              <li className="hover:text-foreground cursor-pointer transition-colors">Blogs</li>
+              <li className="hover:text-foreground cursor-pointer transition-colors">Pricing</li>
+            </ul>
+            <Link href={"/login"}>
+              <Button variant={"default"} size={"lg"} className="text-lg">Login</Button>
             </Link>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
+        </nav>
+      </header>
+      <section className="w-full">
+        <div className="mx-auto max-w-6xl px-6 py-16 lg:px-8">
+          <div className="flex flex-col items-center justify-center gap-5">
 
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
+            <div className="flex flex-col items-center">
+              <h1 className="text-4xl font-semibold md:text-5xl lg:text-6xl">
+                View & Convert CSV files
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                simply upload, view it, save it for later or download in PDF
+                format in seconds.
               </p>
-              {!session ? (
-                <form>
-                  <button
-                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                    formAction={async () => {
-                      "use server";
-                      const res = await auth.api.signInSocial({
-                        body: {
-                          provider: "github",
-                          callbackURL: "/",
-                        },
-                      });
-                      if (!res.url) {
-                        throw new Error("No URL returned from signInSocial");
-                      }
-                      redirect(res.url);
-                    }}
-                  >
-                    Sign in with Github
-                  </button>
-                </form>
-              ) : (
-                <form>
-                  <button
-                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-                    formAction={async () => {
-                      "use server";
-                      await auth.api.signOut({
-                        headers: await headers(),
-                      });
-                      redirect("/");
-                    }}
-                  >
-                    Sign out
-                  </button>
-                </form>
-              )}
+            </div>
+
+            <div
+              className="hover:border-primary/50 w-full cursor-pointer rounded-lg border-2 border-dashed p-8 transition-colors"
+              onClick={() => document.getElementById("file-input")?.click()}
+            >
+              <input
+                id="file-input"
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    console.log("File selected:", file.name);
+                  }
+                }}
+              />
+              <div className="flex flex-col items-center space-y-2">
+                <div className="font-medium">
+                  Choose CSV file or drag here
+                </div>
+                <Button variant="outline">Browse Files</Button>
+              </div>
             </div>
           </div>
-
-          {session?.user && <LatestPost />}
         </div>
-      </main>
-    </HydrateClient>
+      </section>
+
+      <section>
+        <div></div>
+      </section>
+    </div>
   );
 }

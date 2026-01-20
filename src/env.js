@@ -11,12 +11,16 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    BETTER_AUTH_GITHUB_CLIENT_ID: z.string(),
-    BETTER_AUTH_GITHUB_CLIENT_SECRET: z.string(),
+    BETTER_AUTH_URL:z.string().url(),
     DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+      POLAR_ACCESS_TOKEN:z.string(),
+      POLAR_WEBHOOK_SECRET:z.string(),
+      POLAR_SUCCESS_URL:z.string().url(),
+      AUTH_GOOGLE_ID: z.string(),
+      AUTH_GOOGLE_SECRET: z.string(),
   },
 
   /**
@@ -25,7 +29,10 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    // NEXT_PUBLIC_CLIENTVAR: z.string(), 
+    NEXT_PUBLIC_APP_URL: z.string().url(),
+    NEXT_PUBLIC_LIFETIME_ID: z.string(),
+    NEXT_PUBLIC_LIFETIME_SLUG: z.string(),
   },
 
   /**
@@ -34,11 +41,17 @@ export const env = createEnv({
    */
   runtimeEnv: {
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_GITHUB_CLIENT_ID: process.env.BETTER_AUTH_GITHUB_CLIENT_ID,
-    BETTER_AUTH_GITHUB_CLIENT_SECRET:
-      process.env.BETTER_AUTH_GITHUB_CLIENT_SECRET,
+    BETTER_AUTH_URL:process.env.BETTER_AUTH_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    POLAR_ACCESS_TOKEN:process.env.POLAR_ACCESS_TOKEN,
+    POLAR_WEBHOOK_SECRET:process.env.POLAR_WEBHOOK_SECRET,
+    POLAR_SUCCESS_URL:process.env.POLAR_SUCCESS_URL,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+    NEXT_PUBLIC_APP_URL:process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_LIFETIME_ID:process.env.NEXT_PUBLIC_LIFETIME_ID,
+    NEXT_PUBLIC_LIFETIME_SLUG:process.env.NEXT_PUBLIC_LIFETIME_SLUG
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

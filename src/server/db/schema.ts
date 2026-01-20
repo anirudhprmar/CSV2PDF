@@ -8,28 +8,8 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 
-export const createTable = pgTableCreator((name) => `pg-drizzle_${name}`);
+export const createTable = pgTableCreator((name) => `csv-viewer-converter_${name}`);
 
-export const posts = createTable(
-  "post",
-  (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdById: d
-      .varchar({ length: 255 })
-      .notNull()
-      .references(() => user.id),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .$defaultFn(() => new Date())
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
-  }),
-  (t) => [
-    index("created_by_idx").on(t.createdById),
-    index("name_idx").on(t.name),
-  ],
-);
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -90,6 +70,69 @@ export const verification = pgTable("verification", {
     () => /* @__PURE__ */ new Date(),
   ),
 });
+
+export const oneTimePurchase = createTable("oneTimePurchase", (d) => ({
+  // Primary order fields
+  id: d.text("id").primaryKey(),
+  createdAt: d.timestamp("createdAt").notNull(),
+  modifiedAt: d.timestamp("modifiedAt"),
+  status: d.text("status").notNull(), // "paid", "pending", "failed", etc.
+  paid: d.boolean("paid").notNull().default(false),
+
+  // Amount breakdown fields
+  subtotalAmount: d.integer("subtotalAmount").notNull(),
+  discountAmount: d.integer("discountAmount").default(0),
+  netAmount: d.integer("netAmount").notNull(),
+  taxAmount: d.integer("taxAmount").default(0),
+  totalAmount: d.integer("totalAmount").notNull(),
+  refundedAmount: d.integer("refundedAmount").default(0),
+  refundedTaxAmount: d.integer("refundedTaxAmount").default(0),
+  currency: d.text("currency").notNull(),
+  
+  // Billing information
+  billingReason: d.text("billingReason").default("purchase"),
+  billingName: d.text("billingName"),
+  billingAddress: d.text("billingAddress"), // JSON string for address object
+  isInvoiceGenerated: d.boolean("isInvoiceGenerated").default(false),
+  
+  // Relationship fields
+  customerId: d.text("customerId").notNull(),
+  productId: d.text("productId").notNull(),
+  discountId: d.text("discountId"),
+  subscriptionId: d.text("subscriptionId"), // Can be null for one-time purchases
+  checkoutId: d.text("checkoutId").notNull(),
+  userId: d.text("userId").references(() => user.id),
+  
+  // Additional data
+  metadata: d.text("metadata"), // JSON string
+  customFieldData: d.text("customFieldData"), // JSON string
+}));
+
+export const subscription = createTable("subscription",(d) =>({
+  id: d.text("id").primaryKey(),
+  createdAt: d.timestamp("createdAt").notNull(),
+  modifiedAt: d.timestamp("modifiedAt"),
+  amount: d.integer("amount").notNull(),
+  currency: d.text("currency").notNull(),
+  recurringInterval: d.text("recurringInterval").notNull(),
+  status: d.text("status").notNull(),
+  currentPeriodStart: d.timestamp("currentPeriodStart").notNull(),
+  currentPeriodEnd: d.timestamp("currentPeriodEnd").notNull(),
+  cancelAtPeriodEnd: d.boolean("cancelAtPeriodEnd").notNull().default(false),
+  canceledAt: d.timestamp("canceledAt"),
+  startedAt: d.timestamp("startedAt").notNull(),
+  endsAt: d.timestamp("endsAt"),
+  endedAt: d.timestamp("endedAt"),
+  customerId: d.text("customerId").notNull(),
+  productId: d.text("productId").notNull(),
+  discountId: d.text("discountId"),
+  checkoutId: d.text("checkoutId").notNull(),
+  customerCancellationReason: d.text("customerCancellationReason"),
+  customerCancellationComment: d.text("customerCancellationComment"),
+  metadata: d.text("metadata"), // JSON string
+  customFieldData: d.text("customFieldData"), // JSON string
+  userId: d.text("userId").references(() => user.id),
+}));
 
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
