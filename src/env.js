@@ -18,7 +18,7 @@ export const env = createEnv({
       .default("development"),
       POLAR_ACCESS_TOKEN:z.string(),
       POLAR_WEBHOOK_SECRET:z.string(),
-      POLAR_SUCCESS_URL:z.string().url(),
+      POLAR_SUCCESS_URL:z.string(),
       AUTH_GOOGLE_ID: z.string(),
       AUTH_GOOGLE_SECRET: z.string(),
   },

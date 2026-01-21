@@ -1,11 +1,11 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  index,
   pgTable,
   pgTableCreator,
   text,
   timestamp,
+  integer
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `csv-viewer-converter_${name}`);
@@ -71,68 +71,68 @@ export const verification = pgTable("verification", {
   ),
 });
 
-export const oneTimePurchase = createTable("oneTimePurchase", (d) => ({
+export const one_time_purchase = pgTable("one_time_purchase",{
   // Primary order fields
-  id: d.text("id").primaryKey(),
-  createdAt: d.timestamp("createdAt").notNull(),
-  modifiedAt: d.timestamp("modifiedAt"),
-  status: d.text("status").notNull(), // "paid", "pending", "failed", etc.
-  paid: d.boolean("paid").notNull().default(false),
+  id: text("id").primaryKey(),
+  createdAt: timestamp("createdAt").notNull(),
+  modifiedAt: timestamp("modifiedAt"),
+  status: text("status").notNull(), // "paid", "pending", "failed", etc.
+  paid: boolean("paid").notNull().default(false),
 
   // Amount breakdown fields
-  subtotalAmount: d.integer("subtotalAmount").notNull(),
-  discountAmount: d.integer("discountAmount").default(0),
-  netAmount: d.integer("netAmount").notNull(),
-  taxAmount: d.integer("taxAmount").default(0),
-  totalAmount: d.integer("totalAmount").notNull(),
-  refundedAmount: d.integer("refundedAmount").default(0),
-  refundedTaxAmount: d.integer("refundedTaxAmount").default(0),
-  currency: d.text("currency").notNull(),
+  subtotalAmount: integer("subtotalAmount").notNull(),
+  discountAmount: integer("discountAmount").default(0),
+  netAmount: integer("netAmount").notNull(),
+  taxAmount: integer("taxAmount").default(0),
+  totalAmount: integer("totalAmount").notNull(),
+  refundedAmount: integer("refundedAmount").default(0),
+  refundedTaxAmount: integer("refundedTaxAmount").default(0),
+  currency: text("currency").notNull(),
   
   // Billing information
-  billingReason: d.text("billingReason").default("purchase"),
-  billingName: d.text("billingName"),
-  billingAddress: d.text("billingAddress"), // JSON string for address object
-  isInvoiceGenerated: d.boolean("isInvoiceGenerated").default(false),
+  billingReason: text("billingReason").default("purchase"),
+  billingName: text("billingName"),
+  billingAddress: text("billingAddress"), // JSON string for address object
+  isInvoiceGenerated: boolean("isInvoiceGenerated").default(false),
   
   // Relationship fields
-  customerId: d.text("customerId").notNull(),
-  productId: d.text("productId").notNull(),
-  discountId: d.text("discountId"),
-  subscriptionId: d.text("subscriptionId"), // Can be null for one-time purchases
-  checkoutId: d.text("checkoutId").notNull(),
-  userId: d.text("userId").references(() => user.id),
+  customerId: text("customerId").notNull(),
+  productId: text("productId").notNull(),
+  discountId: text("discountId"),
+  subscriptionId: text("subscriptionId"), // Can be null for one-time purchases
+  checkoutId: text("checkoutId").notNull(),
+  userId: text("userId").references(() => user.id),
   
   // Additional data
-  metadata: d.text("metadata"), // JSON string
-  customFieldData: d.text("customFieldData"), // JSON string
-}));
+  metadata: text("metadata"), // JSON string
+  customFieldData: text("customFieldData"), // JSON string
+});
 
-export const subscription = createTable("subscription",(d) =>({
-  id: d.text("id").primaryKey(),
-  createdAt: d.timestamp("createdAt").notNull(),
-  modifiedAt: d.timestamp("modifiedAt"),
-  amount: d.integer("amount").notNull(),
-  currency: d.text("currency").notNull(),
-  recurringInterval: d.text("recurringInterval").notNull(),
-  status: d.text("status").notNull(),
-  currentPeriodStart: d.timestamp("currentPeriodStart").notNull(),
-  currentPeriodEnd: d.timestamp("currentPeriodEnd").notNull(),
-  cancelAtPeriodEnd: d.boolean("cancelAtPeriodEnd").notNull().default(false),
-  canceledAt: d.timestamp("canceledAt"),
-  startedAt: d.timestamp("startedAt").notNull(),
-  endsAt: d.timestamp("endsAt"),
-  endedAt: d.timestamp("endedAt"),
-  customerId: d.text("customerId").notNull(),
-  productId: d.text("productId").notNull(),
-  discountId: d.text("discountId"),
-  checkoutId: d.text("checkoutId").notNull(),
-  customerCancellationReason: d.text("customerCancellationReason"),
-  customerCancellationComment: d.text("customerCancellationComment"),
-  metadata: d.text("metadata"), // JSON string
-  customFieldData: d.text("customFieldData"), // JSON string
-  userId: d.text("userId").references(() => user.id),
-}));
+export const subscription = pgTable("subscription",{
+  id: text("id").primaryKey(),
+  createdAt: timestamp("createdAt").notNull(),
+  modifiedAt: timestamp("modifiedAt"),
+  amount: integer("amount").notNull(),
+  currency: text("currency").notNull(),
+  recurringInterval: text("recurringInterval").notNull(),
+  status: text("status").notNull(),
+  currentPeriodStart: timestamp("currentPeriodStart").notNull(),
+  currentPeriodEnd: timestamp("currentPeriodEnd").notNull(),
+  cancelAtPeriodEnd: boolean("cancelAtPeriodEnd").notNull().default(false),
+  canceledAt: timestamp("canceledAt"),
+  startedAt: timestamp("startedAt").notNull(),
+  endsAt: timestamp("endsAt"),
+  endedAt: timestamp("endedAt"),
+  customerId: text("customerId").notNull(),
+  productId: text("productId").notNull(),
+  discountId: text("discountId"),
+  checkoutId: text("checkoutId").notNull(),
+  customerCancellationReason: text("customerCancellationReason"),
+  customerCancellationComment: text("customerCancellationComment"),
+  metadata: text("metadata"), // JSON string
+  customFieldData: text("customFieldData"), // JSON string
+  userId: text("userId").references(() => user.id),
+});
 
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),

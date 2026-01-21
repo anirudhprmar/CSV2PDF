@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { polar, checkout, portal, webhooks } from "@polar-sh/better-auth";
 import { Polar } from "@polar-sh/sdk";
-import { account, oneTimePurchase, session, subscription, user, verification } from '~/server/db/schema';
+import { account, one_time_purchase, session, subscription, user, verification } from '~/server/db/schema';
 import { env } from "~/env";
 import { db } from "~/server/db";
 
@@ -11,6 +11,7 @@ function safeParseDate(value: string | Date | null | undefined): Date | null {
   if (!value) return null;
   if (value instanceof Date) return value;
   return new Date(value);
+}
 
 const polarClient = new Polar({
     accessToken: env.POLAR_ACCESS_TOKEN,
@@ -37,7 +38,7 @@ export const auth = betterAuth({
             account,
             verification,
             subscription,
-            oneTimePurchase
+            one_time_purchase
         }
     }),
     socialProviders:{
@@ -194,7 +195,7 @@ export const auth = betterAuth({
                 // STEP 1: Extract user ID from customer data
                 const userId = data.customer?.externalId;
 
-                const oneTimePurchaseData = {
+                const one_time_purchase_data = {
                   id: data.id,
                   createdAt: new Date(data.createdAt),
                   modifiedAt: safeParseDate(data.modifiedAt),
@@ -231,17 +232,17 @@ export const auth = betterAuth({
                 };
 
                 await db
-                  .insert(oneTimePurchase)
-                  .values(oneTimePurchaseData)
+                  .insert(one_time_purchase)
+                  .values(one_time_purchase_data)
                   .onConflictDoUpdate({
-                    target: oneTimePurchase.id,
+                    target: one_time_purchase.id,
                     set: {
-                      modifiedAt: oneTimePurchaseData.modifiedAt ?? new Date(),
-                      status: oneTimePurchaseData.status,
-                      paid: oneTimePurchaseData.paid,
-                      refundedAmount: oneTimePurchaseData.refundedAmount,
-                      refundedTaxAmount: oneTimePurchaseData.refundedTaxAmount,
-                      isInvoiceGenerated: oneTimePurchaseData.isInvoiceGenerated,
+                      modifiedAt: one_time_purchase_data.modifiedAt ?? new Date(),
+                      status: one_time_purchase_data.status,
+                      paid: one_time_purchase_data.paid,
+                      refundedAmount: one_time_purchase_data.refundedAmount,
+                      refundedTaxAmount: one_time_purchase_data.refundedTaxAmount,
+                      isInvoiceGenerated: one_time_purchase_data.isInvoiceGenerated,
                     },
                   });
                   
