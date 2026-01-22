@@ -33,6 +33,8 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_LIFETIME_ID: z.string(),
     NEXT_PUBLIC_LIFETIME_SLUG: z.string(),
+    NEXT_PUBLIC_POSTHOG_KEY:z.string(),
+    NEXT_PUBLIC_POSTHOG_HOST:z.string()
   },
 
   /**
@@ -51,7 +53,9 @@ export const env = createEnv({
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     NEXT_PUBLIC_APP_URL:process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_LIFETIME_ID:process.env.NEXT_PUBLIC_LIFETIME_ID,
-    NEXT_PUBLIC_LIFETIME_SLUG:process.env.NEXT_PUBLIC_LIFETIME_SLUG
+    NEXT_PUBLIC_LIFETIME_SLUG:process.env.NEXT_PUBLIC_LIFETIME_SLUG,
+    NEXT_PUBLIC_POSTHOG_KEY:process.env.NEXT_PUBLIC_POSTHOG_KEY,
+    NEXT_PUBLIC_POSTHOG_HOST:process.env.NEXT_PUBLIC_POSTHOG_HOST
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

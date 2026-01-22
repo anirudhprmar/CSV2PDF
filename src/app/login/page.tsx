@@ -10,7 +10,7 @@ import { Suspense, useState } from "react";
 import { toast } from "sonner";
 import { Card, CardContent } from "~/components/ui/card";
 
-function SignInContent() {
+function LoginContent() {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
   const returnTo = searchParams.get("returnTo");
@@ -117,7 +117,6 @@ function SignInContent() {
     </main>
   );
 }
-
 export default function SignIn() {
   return (
     <Suspense
@@ -127,7 +126,7 @@ export default function SignIn() {
         </div>
       }
       >
-      <SignInContent />
+      <LoginContent />
     </Suspense>
   );
 }
