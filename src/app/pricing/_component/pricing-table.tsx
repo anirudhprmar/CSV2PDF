@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { authClient } from "~/lib/auth-client";
+import { authClient } from "~/server/better-auth/client";
 import { Check } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -66,7 +66,7 @@ export default function PricingTable({
 
   const handleCheckout = async (productId: string, slug: string) => {
     if (isAuthenticated === false) {
-      router.push("/sign-in");
+      router.push("/login");
       return;
     }
 
@@ -90,13 +90,11 @@ export default function PricingTable({
     }
   };
 
-  const STARTER_TIER = env.NEXT_PUBLIC_STARTER_TIER;
-  const STARTER_SLUG = env.NEXT_PUBLIC_STARTER_SLUG;
 
-  const LIFETIME_TIER = env.NEXT_PUBLIC_LIFETIME_TIER;
+  const LIFETIME_TIER = env.NEXT_PUBLIC_LIFETIME_ID;
   const LIFETIME_SLUG = env.NEXT_PUBLIC_LIFETIME_SLUG;
 
-  if (!STARTER_TIER || !STARTER_SLUG || !LIFETIME_TIER || !LIFETIME_SLUG) {
+  if ( !LIFETIME_TIER || !LIFETIME_SLUG) {
     throw new Error("Missing required environment variables for Starter tier");
   }
 
@@ -128,73 +126,6 @@ export default function PricingTable({
       </div>
 
       <div className="flex items-center justify-center gap-8 max-w-5xl w-full flex-col md:flex-row">
-        {/* Starter Tier */}
-        <Card className="relative h-fit w-full md:w-1/2 border-border/50 shadow-lg hover:shadow-xl transition-shadow duration-300">
-          {isCurrentPlan(STARTER_TIER) && (
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground"
-              >
-                Current Plan
-              </Badge>
-            </div>
-          )}
-          <CardHeader className="pb-8">
-            <CardTitle className="text-2xl">1-Year Pass</CardTitle>
-            <CardDescription className="text-base mt-2">Perfect for focused learning goals</CardDescription>
-            <div className="mt-6 flex items-baseline gap-1">
-              <span className="text-5xl font-bold">$25</span>
-              <span className="text-muted-foreground">/ year</span>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {[
-              "Unlimited Word Collection",
-              "Unlimited Practice Sessions",
-              "AI Conversation Partner",
-              "Advanced Progress Tracking",
-              "Community Access"
-            ].map((feature, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-secondary flex items-center justify-center shrink-0">
-                  <Check className="h-3.5 w-3.5 text-foreground" />
-                </div>
-                <span className="text-muted-foreground">{feature}</span>
-              </div>
-            ))}
-          </CardContent>
-          <CardFooter className="pt-8">
-            {isCurrentPlan(STARTER_TIER) ? (
-              <div className="w-full space-y-3">
-                <Button
-                  className="w-full py-6 text-lg"
-                  variant="outline"
-                  onClick={handleManageSubscription}
-                >
-                  Manage Subscription
-                </Button>
-                {subscriptionDetails.subscription && (
-                  <p className="text-sm text-muted-foreground text-center">
-                    {subscriptionDetails.subscription.cancelAtPeriodEnd
-                      ? `Expires ${formatDate(subscriptionDetails.subscription.currentPeriodEnd)}`
-                      : `Renews ${formatDate(subscriptionDetails.subscription.currentPeriodEnd)}`}
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center flex-col w-full gap-3">
-                <Button
-                  className="w-full py-6 text-lg font-medium"
-                  onClick={() => handleCheckout(STARTER_TIER, STARTER_SLUG)}
-                >
-                  {isAuthenticated === false ? "Sign In to Subscribe" : "Get Started"}
-                </Button>
-                <p className="text-muted-foreground text-xs">Secure payment via Stripe</p>
-              </div>
-            )}
-          </CardFooter>
-        </Card>
 
         {/* Lifetime Tier */}
         <Card className="relative h-fit w-full md:w-1/2 border-primary/20 shadow-xl hover:shadow-2xl transition-shadow duration-300 bg-secondary/10">
@@ -215,7 +146,7 @@ export default function PricingTable({
             <CardTitle className="text-2xl">Lifetime Access</CardTitle>
             <CardDescription className="text-base mt-2">One payment, forever mastery</CardDescription>
             <div className="mt-6 flex items-baseline gap-1">
-              <span className="text-5xl font-bold">$45</span>
+              <span className="text-5xl font-bold">$5</span>
               <span className="text-muted-foreground">/ once</span>
             </div>
           </CardHeader>
