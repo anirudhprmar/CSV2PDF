@@ -21,7 +21,7 @@ export default function Navbar() {
           </div>
         </nav>
 
-        <div className="relative w-full">
+        <div className="relative">
           <div className="h-px w-full absolute border border-dashed bg-linear-to-t from-neutral-300 to-neutral-300 pointer-events-none z-0"/>
         </div>
 
