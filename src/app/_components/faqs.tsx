@@ -1,0 +1,63 @@
+import Link from "next/link";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
+
+export default function FAQs() {
+  const faqs = [
+    {
+      question: "Is this app free, or what are the in-app purchase options?",
+      answer:
+        "The app is free to use with basic features. We offer premium plans for advanced features like bulk file processing, unlimited conversions, and priority support. Check our pricing section for detailed information about available plans.",
+    },
+    {
+      question: "Can the app handle large CSV files without crashing?",
+      answer:
+        "Yes, our app is optimized to handle large CSV files efficiently. We use advanced chunking and streaming techniques to process files of various sizes. For optimal performance, we recommend files under 100MB for the free tier and unlimited file sizes for premium users.",
+    },
+    {
+      question: "Can I edit cells, rows, or columns directly in the viewer?",
+      answer:
+        "Currently, the app is designed primarily for viewing and converting CSV files. Basic editing capabilities like sorting and filtering are available. Full editing features including cell modification, row/column operations are planned for future releases based on user feedback.",
+    },
+    {
+      question: "How do I convert a CSV file to PDF using the app?",
+      answer:
+        "Converting your CSV to PDF is simple: First, upload your CSV file using the file picker or drag-and-drop area. Once the file is loaded and displayed in the viewer, click the 'Convert to PDF' button in the toolbar. You can customize the PDF layout options before downloading the final document.",
+    },
+  ];
+
+  return (
+    <section className="p-5">
+      <div className="mx-auto max-w-3xl">
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <p className="mt-2 text-muted-foreground">
+            Have another question? Contact us on <Link href="https://x.com/anirudhprmar" target="_blank" className="underline">X</Link>
+          </p>
+        </div>
+        <Accordion type="single" collapsible className="w-full space-y-4">
+          {faqs.map((faq, index) => (
+            <AccordionItem
+              key={index}
+              value={`item-${index}`}
+              className="border rounded-lg px-6 bg-card"
+            >
+              <AccordionTrigger className="text-left hover:no-underline">
+                <span className="font-medium">{faq.question}</span>
+              </AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
+  );
+}

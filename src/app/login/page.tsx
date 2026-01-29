@@ -117,7 +117,7 @@ function LoginContent() {
     </main>
   );
 }
-export default function SignIn() {
+export default function Login() {
   return (
     <Suspense
     fallback={

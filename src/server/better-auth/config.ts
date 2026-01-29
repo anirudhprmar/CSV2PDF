@@ -185,77 +185,77 @@ export const auth = betterAuth({
                         }
 
                               if (
-              type === "order.created" ||
-              type === "order.paid" ||
-              type === "order.updated" ||
-              type === "order.refunded"
-            ) {
-              // console.log("📦 Order event received:", type, data.id);
-                 try {
-                // STEP 1: Extract user ID from customer data
-                const userId = data.customer?.externalId;
+                    type === "order.created" ||
+                    type === "order.paid" ||
+                    type === "order.updated" ||
+                    type === "order.refunded"
+                    ) {
+                    // console.log("📦 Order event received:", type, data.id);
+                    try {
+                    // STEP 1: Extract user ID from customer data
+                    const userId = data.customer?.externalId;
 
-                const one_time_purchase_data = {
-                  id: data.id,
-                  createdAt: new Date(data.createdAt),
-                  modifiedAt: safeParseDate(data.modifiedAt),
-                  status: data.status,
-                  paid: data.paid || false,
-                  
-                  // Amount fields
-                  subtotalAmount: data.subtotalAmount ?? 0,
-                  discountAmount: data.discountAmount ?? 0,
-                  netAmount: data.netAmount || 0,
-                  taxAmount: data.taxAmount || 0,
-                  totalAmount: data.totalAmount || 0,
-                  refundedAmount: data.refundedAmount || 0,
-                  refundedTaxAmount: data.refundedTaxAmount || 0,
-                  currency: data.currency,
-                  
-                  // Billing fields
-                  billingReason: data.billingReason || "purchase",
-                  billingName: data.billingName,
-                  billingAddress: data.billingAddress ? JSON.stringify(data.billingAddress) : null,
-                  isInvoiceGenerated: data.isInvoiceGenerated || false,
-                  
-                  // Relationships
-                  customerId: data.customerId,
-                  productId: data.productId,
-                  discountId: data.discountId ?? null,
-                  subscriptionId: data.subscriptionId ?? null, // Will be null for one-time
-                  checkoutId: data.checkoutId ?? "",
-                  userId: userId,
-                  
-                  // Additional data
-                  metadata: data.metadata ? JSON.stringify(data.metadata) : null,
-                  customFieldData: data.customFieldData ? JSON.stringify(data.customFieldData) : null,
-                };
+                    const one_time_purchase_data = {
+                    id: data.id,
+                    createdAt: new Date(data.createdAt),
+                    modifiedAt: safeParseDate(data.modifiedAt),
+                    status: data.status,
+                    paid: data.paid || false,
+                    
+                    // Amount fields
+                    subtotalAmount: data.subtotalAmount ?? 0,
+                    discountAmount: data.discountAmount ?? 0,
+                    netAmount: data.netAmount || 0,
+                    taxAmount: data.taxAmount || 0,
+                    totalAmount: data.totalAmount || 0,
+                    refundedAmount: data.refundedAmount || 0,
+                    refundedTaxAmount: data.refundedTaxAmount || 0,
+                    currency: data.currency,
+                    
+                    // Billing fields
+                    billingReason: data.billingReason || "purchase",
+                    billingName: data.billingName,
+                    billingAddress: data.billingAddress ? JSON.stringify(data.billingAddress) : null,
+                    isInvoiceGenerated: data.isInvoiceGenerated || false,
+                    
+                    // Relationships
+                    customerId: data.customerId,
+                    productId: data.productId,
+                    discountId: data.discountId ?? null,
+                    subscriptionId: data.subscriptionId ?? null, // Will be null for one-time
+                    checkoutId: data.checkoutId ?? "",
+                    userId: userId,
+                    
+                    // Additional data
+                    metadata: data.metadata ? JSON.stringify(data.metadata) : null,
+                    customFieldData: data.customFieldData ? JSON.stringify(data.customFieldData) : null,
+                    };
 
-                await db
-                  .insert(one_time_purchase)
-                  .values(one_time_purchase_data)
-                  .onConflictDoUpdate({
-                    target: one_time_purchase.id,
-                    set: {
-                      modifiedAt: one_time_purchase_data.modifiedAt ?? new Date(),
-                      status: one_time_purchase_data.status,
-                      paid: one_time_purchase_data.paid,
-                      refundedAmount: one_time_purchase_data.refundedAmount,
-                      refundedTaxAmount: one_time_purchase_data.refundedTaxAmount,
-                      isInvoiceGenerated: one_time_purchase_data.isInvoiceGenerated,
-                    },
-                  });
-                  
-                  // console.log(`✅ Processed ${type} for order: ${data.id}`);
+                    await db
+                    .insert(one_time_purchase)
+                    .values(one_time_purchase_data)
+                    .onConflictDoUpdate({
+                        target: one_time_purchase.id,
+                        set: {
+                        modifiedAt: one_time_purchase_data.modifiedAt ?? new Date(),
+                        status: one_time_purchase_data.status,
+                        paid: one_time_purchase_data.paid,
+                        refundedAmount: one_time_purchase_data.refundedAmount,
+                        refundedTaxAmount: one_time_purchase_data.refundedTaxAmount,
+                        isInvoiceGenerated: one_time_purchase_data.isInvoiceGenerated,
+                        },
+                    });
+                    
+                    // console.log(`✅ Processed ${type} for order: ${data.id}`);
 
-              } catch (error) {
-                console.error(
-                  "💥 Error processing one time purchase webhook:",
-                  error,
-                );
-                // Don't throw - let webhook succeed to avoid retries
-              }
-            }
+                } catch (error) {
+                    console.error(
+                    "💥 Error processing one time purchase webhook:",
+                    error,
+                    );
+                    // Don't throw - let webhook succeed to avoid retries
+                }
+                }
           },
                     
                 })

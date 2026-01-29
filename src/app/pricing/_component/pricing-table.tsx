@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { authClient } from "~/server/better-auth/client";
-import { Check } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type RefObject } from "react";
@@ -114,26 +114,31 @@ export default function PricingTable({
     });
   };
 
+   const appFeatures = [
+    "Unlimited CSV file uploads and conversions",
+    "Convert to PDF instantly",
+    "No monthly subscription",
+    "Lifetime access",
+    "Priority support",
+  ];
+
   return (
-    <section id="pricing" className="flex flex-col items-center justify-center px-4 w-full py-24 bg-background" ref={ref}>
-      <div className="text-center mb-16 max-w-2xl">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6 text-foreground">
-          Invest in Your Words
-        </h2>
-        <p className="text-xl text-muted-foreground font-light">
-          Choose the plan that fits your ambition. Simple, transparent pricing for unlimited growth.
-        </p>
-      </div>
+    <section id="pricing" className="w-full p-5" ref={ref}>
+    
+     <div className="mb-8 text-center">
+          <h2 className="text-3xl font-semibold tracking-tight">
+            Simple Pricing. Lifetime Value
+          </h2>
+        </div>
 
-      <div className="flex items-center justify-center gap-8 max-w-5xl w-full flex-col md:flex-row">
+      <div className="mx-auto max-w-md">
 
-        {/* Lifetime Tier */}
-        <Card className="relative h-fit w-full md:w-1/2 border-primary/20 shadow-xl hover:shadow-2xl transition-shadow duration-300 bg-secondary/10">
-          <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+        <Card className="relative border-2 border-dashed ">
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
             <Badge className="bg-foreground text-background px-4 py-1 text-sm">Best Value</Badge>
           </div>
           {isCurrentPlan(LIFETIME_TIER) && (
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 mt-8">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
               <Badge
                 variant="secondary"
                 className="bg-primary text-primary-foreground"
@@ -142,29 +147,31 @@ export default function PricingTable({
               </Badge>
             </div>
           )}
-          <CardHeader className="pb-8">
-            <CardTitle className="text-2xl">Lifetime Access</CardTitle>
-            <CardDescription className="text-base mt-2">One payment, forever mastery</CardDescription>
-            <div className="mt-6 flex items-baseline gap-1">
-              <span className="text-5xl font-bold">$5</span>
-              <span className="text-muted-foreground">/ once</span>
+          <CardHeader className="text-center pt-10 pb-8">
+            <CardTitle className="text-2xl font-semibold">Lifetime Access</CardTitle>
+
+            <CardDescription className="text-base mt-2">One-time payment, unlimited access forever
+            </CardDescription>
+
+            <div className="mt-6">
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-5xl font-bold tracking-tight">$5</span>
+                <span className="text-muted-foreground text-sm">
+                  one-time
+                </span>
+              </div>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            {[
-              "Everything in 1-Year Pass",
-              "Lifetime Updates",
-              "Priority Support",
-              "Early Access to New Features",
-              "Founding Member Badge"
-            ].map((feature, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="h-6 w-6 rounded-full bg-foreground flex items-center justify-center shrink-0">
-                  <Check className="h-3.5 w-3.5 text-background" />
-                </div>
-                <span className="text-foreground font-medium">{feature}</span>
-              </div>
-            ))}
+            <ul className="space-y-3">
+              {appFeatures.map((feature, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <CheckIcon className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            
           </CardContent>
           <CardFooter className="pt-8">
             {isCurrentPlan(LIFETIME_TIER) ? (
@@ -183,14 +190,15 @@ export default function PricingTable({
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center flex-col w-full gap-3">
+              <div className="flex-col w-full gap-4">
                 <Button
-                  className="w-full py-6 text-lg font-medium bg-foreground text-background hover:bg-foreground/90"
+                  className="w-full"
+                  size={'lg'}
                   onClick={() => handleCheckout(LIFETIME_TIER, LIFETIME_SLUG)}
                 >
-                  {isAuthenticated === false ? "Sign In to Subscribe" : "Get Lifetime Access"}
+                  {isAuthenticated === false ? "Sign In to Purchase" : "Get Lifetime Access"}
                 </Button>
-                <p className="text-muted-foreground text-xs">Pay once, own it forever</p>
+                <p className="text-muted-foreground text-xs text-center">Pay once, own it forever</p>
               </div>
             )}
           </CardFooter>

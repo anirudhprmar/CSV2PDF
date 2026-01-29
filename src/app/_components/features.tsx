@@ -1,56 +1,25 @@
-"use client";
-
-import { Sparkles, Infinity, Shield } from "lucide-react";
-
-const features = [
-  {
-    icon: Sparkles,
-    title: "Beautiful",
-    description:
-      "Professionally designed and visually appealing invoices can increase the chances of clients paying promptly.",
-  },
-  {
-    icon: Infinity,
-    title: "Free & Unlimited",
-    description:
-      "Create and send as many invoices as you need — no limits, no hidden costs, just seamless billing freedom.",
-  },
-  {
-    icon: Shield,
-    title: "Safe & Open Source",
-    description:
-      "Your data stays yours — we never track, sell, or share it. Store everything locally or securely on our server — the choice is yours.",
-  },
-];
 
 export default function Features() {
+    const featuresList = [
+        {title:"Simple",descripition:"Easy to use interface for quick CSV viewing and conversion."},
+        {title:"Fast",descripition:"Optimized for speed to handle large CSV files efficiently."},
+        {title:"Own your CSV",descripition:"Your data privacy is our top priority with robust security measures."},
+    ]
   return (
-    <section className="w-full py-20 bg-neutral-950">
-      <div className="mx-auto max-w-6xl px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <div
-                key={index}
-                className="flex flex-col space-y-4 text-left"
-              >
-                <div className="flex items-center space-x-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-800/50 border border-neutral-700">
-                    <Icon className="h-5 w-5 text-neutral-300" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white tracking-tight">
-                    {feature.title}
-                  </h3>
-                </div>
-                <p className="text-neutral-400 leading-relaxed text-sm">
-                  {feature.description}
-                </p>
-              </div>
-            );
-          })}
+    <section className="p-5">
+      <div className="mx-auto">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 relative">
+          {featuresList.map((feature, index) => (
+            <div key={index} className="flex flex-col items-start space-y-2">
+              <h3 className="text-xl font-semibold">{feature.title}</h3>
+              <p className="mt-2 text-muted-foreground">{feature.descripition}</p>
+            </div>
+          ))}
+          {/* Vertical dividers positioned absolutely relative to grid */}
+          <div className="hidden md:block absolute top-0 bottom-0 left-[33.33%] w-px border-r border-dashed border-neutral-300 -my-5 h-[calc(100%+2.5rem)]"/>
+          <div className="hidden md:block absolute top-0 bottom-0 left-[66.66%] w-px border-r border-dashed border-neutral-300 -my-5 h-[calc(100%+2.5rem)]"/>
         </div>
       </div>
     </section>
-  );
+  )
 }
