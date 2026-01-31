@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { X, Download, FileText, Search, Filter } from "lucide-react";
+import { Download, FileText, Search, Filter } from "lucide-react";
 import { Input } from "~/components/ui/input";
 
 interface CsvViewerProps {
@@ -121,8 +121,8 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
     : dataRows;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-background rounded-lg shadow-2xl w-full max-w-7xl max-h-[90vh] flex flex-col">
+    <div className="w-full h-screen flex items-center justify-center p-4">
+      <div className="bg-background rounded-lg shadow-2xl w-full max-w-7xl h-[calc(100vh-2rem)] flex flex-col">
         {/* Header */}
         <div className="flex flex-col border-b">
           <div className="flex items-center justify-between p-6">
@@ -143,8 +143,8 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
                 <Download className="mr-2 h-4 w-4" />
                 Download PDF
               </Button>
-              <Button onClick={onClose} variant="ghost" size="icon">
-                <X className="h-5 w-5" />
+              <Button onClick={onClose} variant="ghost" size="sm">
+                Back to Upload
               </Button>
             </div>
           </div>
