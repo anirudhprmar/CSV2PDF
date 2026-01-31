@@ -192,7 +192,13 @@ export const auth = betterAuth({
                     ) {
                     // console.log("📦 Order event received:", type, data.id);
                     try {
-                    // STEP 1: Extract user ID from customer data
+                    // STEP 1: Validate productId exists (required field)
+                    if (!data.productId) {
+                        console.warn("⚠️ Skipping order without productId:", data.id);
+                        return; // Skip processing orders without a product
+                    }
+
+                    // STEP 2: Extract user ID from customer data
                     const userId = data.customer?.externalId;
 
                     const one_time_purchase_data = {
@@ -220,7 +226,7 @@ export const auth = betterAuth({
                     
                     // Relationships
                     customerId: data.customerId,
-                    productId: data.productId,
+                    productId: data.productId, 
                     discountId: data.discountId ?? null,
                     subscriptionId: data.subscriptionId ?? null, // Will be null for one-time
                     checkoutId: data.checkoutId ?? "",
