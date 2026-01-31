@@ -12,7 +12,7 @@ export default function Hero() {
                 See your CSV&apos;s instantly
               </h1>
               <p className="text-muted-foreground text-lg mt-4">
-                 Upload, preview, save, or convert to PDF in seconds.
+                 Upload, preview, save, or convert CSV to PDF in seconds.
               </p>
             </div>
 
