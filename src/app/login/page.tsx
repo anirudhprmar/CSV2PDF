@@ -43,7 +43,7 @@ function LoginContent() {
                     await authClient.signIn.social(
                       {
                         provider: "google",
-                        callbackURL: returnTo ?? "/profile",
+                        callbackURL: returnTo ?? "/dashboard",
                       },
                       {
                         onRequest: () => {

@@ -1,4 +1,5 @@
 import { createCallerFactory, createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { userRouter } from "~/server/api/routers/user.router";
 
 /**
  * This is the primary router for your server.
@@ -9,6 +10,7 @@ export const appRouter = createTRPCRouter({
   health: createTRPCRouter({
     check: publicProcedure.query(() => ({ status: "ok" })),
   }),
+  user: userRouter,
 });
 
 // export type definition of API

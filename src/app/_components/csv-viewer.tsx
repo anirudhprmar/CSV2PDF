@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import {
   Table,
@@ -11,8 +12,13 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Download, FileText, Search, Filter } from "lucide-react";
+import { Download, FileText, Search, Filter, Save, ArrowLeft } from "lucide-react";
 import { Input } from "~/components/ui/input";
+import Papa from "papaparse";
+import { api } from "~/lib/api";
+import { convertCsvToPdf } from "~/lib/pdfConverter";
+import { fileStorage } from "~/lib/db";
+import { toast } from "sonner";
 
 interface CsvViewerProps {
   file: File;
@@ -20,62 +26,123 @@ interface CsvViewerProps {
 }
 
 export default function CsvViewer({ file, onClose }: CsvViewerProps) {
+  const router = useRouter();
   const [csvData, setCsvData] = useState<string[][]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const parentRef = useRef<HTMLDivElement>(null);
 
-  // Parse CSV file
+  // Check if user is authenticated
+  const { data: userInfo } = api.user.getProfile.useQuery(undefined, {
+    retry: false,
+    refetchOnWindowFocus: false,
+  });
+  const isAuthenticated = !!userInfo;
+
+  // Parse CSV file using PapaParse
   useEffect(() => {
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      try {
-        const text = e.target?.result as string;
-        const rows = text.split("\n").map((row) => {
-          // Simple CSV parsing (handles basic cases)
-          const cells: string[] = [];
-          let currentCell = "";
-          let insideQuotes = false;
-
-          for (let i = 0; i < row.length; i++) {
-            const char = row[i];
-
-            if (char === '"') {
-              insideQuotes = !insideQuotes;
-            } else if (char === "," && !insideQuotes) {
-              cells.push(currentCell.trim());
-              currentCell = "";
-            } else {
-              currentCell += char;
+    Papa.parse(file, {
+      complete: (results) => {
+        try {
+          // Filter out empty rows
+          const filteredData = results.data.filter((row: unknown) => {
+            if (Array.isArray(row)) {
+              return row.some((cell) => cell !== "" && cell !== null && cell !== undefined);
             }
-          }
-          cells.push(currentCell.trim());
-          return cells;
-        });
+            return false;
+          }) as string[][];
 
-        setCsvData(rows.filter((row) => row.some((cell) => cell !== "")));
+          setCsvData(filteredData);
+          setIsLoading(false);
+        } catch (err) {
+          setError("Failed to parse CSV file");
+          setIsLoading(false);
+        }
+      },
+      error: (err) => {
+        console.error("PapaParse error:", err);
+        setError("Failed to read CSV file");
         setIsLoading(false);
-      } catch (err) {
-        setError("Failed to parse CSV file");
-        setIsLoading(false);
-      }
-    };
-
-    reader.onerror = () => {
-      setError("Failed to read file");
-      setIsLoading(false);
-    };
-
-    reader.readAsText(file);
+      },
+      skipEmptyLines: true,
+      dynamicTyping: false, // Keep all values as strings
+    });
   }, [file]);
 
+  const handleSaveToDatabase = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please sign in to save files");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const headers = csvData[0] || [];
+      const dataRows = csvData.slice(1);
+
+      await fileStorage.addFile({
+        fileName: file.name,
+        fileSize: file.size,
+        rowCount: dataRows.length,
+        columnCount: headers.length,
+        columns: headers,
+        data: dataRows,
+      });
+
+      toast.success("File saved to dashboard!");
+      
+      // Navigate to dashboard after saving
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to save file:", error);
+      toast.error("Failed to save file. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const downloadAsPdf = () => {
-    // Placeholder for PDF download functionality
-    console.log("Download as PDF clicked");
-    // TODO: Implement PDF conversion
+    if (!isAuthenticated) {
+      toast.error("Please sign in to download PDF");
+      return;
+    }
+
+    setIsDownloading(true);
+    try {
+      const headers = csvData[0] || [];
+      const dataRows = csvData.slice(1);
+
+      // Determine orientation based on column count
+      const orientation = headers.length > 6 ? "landscape" : "portrait";
+
+      convertCsvToPdf(headers, dataRows, {
+        fileName: file.name.replace(".csv", ".pdf"),
+        orientation,
+        pageSize: "a4",
+      });
+
+      toast.success("PDF downloaded successfully!");
+    } catch (error) {
+      console.error("Failed to generate PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleBack = () => {
+    // If authenticated, go to dashboard; otherwise go to landing page
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    } else {
+      onClose();
+    }
   };
 
   if (isLoading) {
@@ -139,12 +206,39 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              <Button onClick={downloadAsPdf} variant="default" size="sm">
-                <Download className="mr-2 h-4 w-4" />
-                Download PDF
-              </Button>
-              <Button onClick={onClose} variant="ghost" size="sm">
-                Back to Upload
+              {isAuthenticated ? (
+                <>
+                  <Button 
+                    onClick={handleSaveToDatabase} 
+                    variant="default" 
+                    size="sm"
+                    disabled={isSaving}
+                  >
+                    <Save className="mr-2 h-4 w-4" />
+                    {isSaving ? "Saving..." : "Save to Dashboard"}
+                  </Button>
+                  <Button 
+                    onClick={downloadAsPdf} 
+                    variant="default" 
+                    size="sm"
+                    disabled={isDownloading}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    {isDownloading ? "Generating..." : "Download PDF"}
+                  </Button>
+                </>
+              ) : (
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={() => router.push("/login")}
+                >
+                  Sign in to save or download
+                </Button>
+              )}
+              <Button onClick={handleBack} variant="ghost" size="sm">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}
               </Button>
             </div>
           </div>
