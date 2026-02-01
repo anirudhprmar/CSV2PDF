@@ -1,5 +1,5 @@
 "use client"
-import { Bookmark, Download } from "lucide-react"
+import { Download, Save } from "lucide-react"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"
 import { Button } from "~/components/ui/button"
@@ -27,7 +27,7 @@ export default function LoginDialog() {
       <DialogTrigger asChild>
         <div className="flex items-center justify-center gap-3">
         <Button variant="outline" size={'sm'}>
-            <Bookmark className="mr-2 h-4 w-4" />            
+            <Save className="mr-2 h-4 w-4" />            
             Save
         </Button>
         <Button variant="default" size={'sm'}>

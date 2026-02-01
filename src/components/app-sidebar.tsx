@@ -12,13 +12,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
-import { CheckCheck, LayoutIcon, FileText, Upload, Share2, Send, Inbox, Globe } from "lucide-react"
+import { LayoutIcon } from "lucide-react"
 import { NavSecondary } from "./nav-secondary"
-import { IconCreditCardPay, IconSettings} from "@tabler/icons-react"
+import { IconSettings, IconCreditCardPay } from "@tabler/icons-react"
 
-
-type AppSidebarProps =  React.ComponentProps<typeof Sidebar>
-
+type AppSidebarProps = React.ComponentProps<typeof Sidebar>
 
 const data = {
   navMain: [
@@ -34,28 +32,21 @@ const data = {
       url: "/dashboard/settings",
       icon: IconSettings,
     },
-     {
+    {
       title: "Payment",
       url: "/dashboard/payment",
       icon: IconCreditCardPay,
     },
   ],
-
 }
 
-
-
-export function AppSidebar({...props }:AppSidebarProps) {
-
+export function AppSidebar({ ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:p-1.5!"
-            >
+            <SidebarMenuButton asChild className="px-4">
               <a href="/dashboard">
                 <span className="text-base font-semibold">CSV2PDF</span>
               </a>
@@ -63,8 +54,8 @@ export function AppSidebar({...props }:AppSidebarProps) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain}  />
+      <SidebarContent className="flex flex-col justify-between">
+        <NavMain items={data.navMain} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

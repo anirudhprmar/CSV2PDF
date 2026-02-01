@@ -19,6 +19,7 @@ import { api } from "~/lib/api";
 import { convertCsvToPdf } from "~/lib/pdfConverter";
 import { fileStorage } from "~/lib/db";
 import { toast } from "sonner";
+import LoginDialog from "./login-dialog";
 
 interface CsvViewerProps {
   file: File;
@@ -207,16 +208,17 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
             </div>
             <div className="flex items-center space-x-2">
               {isAuthenticated ? (
-                <>
+                <div className="flex items-center justify-center gap-3">
                   <Button 
                     onClick={handleSaveToDatabase} 
-                    variant="default" 
+                    variant="outline" 
                     size="sm"
                     disabled={isSaving}
                   >
                     <Save className="mr-2 h-4 w-4" />
                     {isSaving ? "Saving..." : "Save to Dashboard"}
                   </Button>
+                  
                   <Button 
                     onClick={downloadAsPdf} 
                     variant="default" 
@@ -226,15 +228,10 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
                     <Download className="mr-2 h-4 w-4" />
                     {isDownloading ? "Generating..." : "Download PDF"}
                   </Button>
-                </>
+                        
+                </div>
               ) : (
-                <Button 
-                  variant="default" 
-                  size="sm"
-                  onClick={() => router.push("/login")}
-                >
-                  Sign in to save or download
-                </Button>
+                <LoginDialog/>
               )}
               <Button onClick={handleBack} variant="ghost" size="sm">
                 <ArrowLeft className="mr-2 h-4 w-4" />

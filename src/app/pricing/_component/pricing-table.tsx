@@ -13,32 +13,32 @@ import { authClient } from "~/server/better-auth/client";
 import { CheckIcon } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, type RefObject } from "react";
+import { type RefObject } from "react";
 import { env } from "~/env";
+import { api } from "~/lib/api";
 
-type SubscriptionDetails = {
+type PurchaseDetails = {
   id: string;
   productId: string;
   status: string;
-  amount: number;
+  totalAmount: number;
   currency: string;
-  recurringInterval: string;
-  currentPeriodStart: Date;
-  currentPeriodEnd: Date;
-  cancelAtPeriodEnd: boolean;
-  canceledAt: Date | null;
+  paid: boolean;
+  refundedAmount: number | null;
+  refundedTaxAmount: number | null;
+  isInvoiceGenerated: boolean | null;
   organizationId: string | null;
 };
 
-type SubscriptionDetailsResult = {
-  hasSubscription: boolean;
-  subscription?: SubscriptionDetails;
+type PurchaseDetailsResult = {
+  hasPurchased: boolean;
+  purchase?: PurchaseDetails;
   error?: string;
-  errorType?: "CANCELED" | "EXPIRED" | "GENERAL";
+  errorType?: "REFUNDED" | "PENDING" | "GENERAL";
 };
 
 interface PricingTableProps {
-  subscriptionDetails: SubscriptionDetailsResult;
+  purchaseDetails: PurchaseDetailsResult;
 }
 
 interface props {
@@ -47,22 +47,13 @@ interface props {
 
 export default function PricingTable({
   ref,
-  subscriptionDetails
+  purchaseDetails
 }: props & PricingTableProps) {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const session = await authClient.getSession();
-        setIsAuthenticated(!!session.data?.user);
-      } catch {
-        setIsAuthenticated(false);
-      }
-    };
-    void checkAuth();
-  }, []);
+  const { data: isAuthenticatedData, isLoading } = api.user.isAuthenticated.useQuery();
+  
+  // Use the tRPC data directly, fallback to false if undefined
+  const isAuthenticated = isAuthenticatedData ?? false;
 
   const handleCheckout = async (productId: string, slug: string) => {
     if (isAuthenticated === false) {
@@ -81,12 +72,12 @@ export default function PricingTable({
     }
   };
 
-  const handleManageSubscription = async () => {
+  const handleManagePurchase = async () => {
     try {
       await authClient.customer.portal();
     } catch (error) {
       console.error("Failed to open customer portal:", error);
-      toast.error("Failed to open subscription management");
+      toast.error("Failed to open purchase management");
     }
   };
 
@@ -95,24 +86,19 @@ export default function PricingTable({
   const LIFETIME_SLUG = env.NEXT_PUBLIC_LIFETIME_SLUG;
 
   if ( !LIFETIME_TIER || !LIFETIME_SLUG) {
-    throw new Error("Missing required environment variables for Starter tier");
+    throw new Error("Missing required environment variables for Lifetime tier");
   }
 
-  const isCurrentPlan = (tierProductId: string) => {
+  const hasPurchasedProduct = (tierProductId: string) => {
     return (
-      subscriptionDetails.hasSubscription &&
-      subscriptionDetails.subscription?.productId === tierProductId &&
-      subscriptionDetails.subscription?.status === "active"
+      purchaseDetails.hasPurchased &&
+      purchaseDetails.purchase?.productId === tierProductId &&
+      purchaseDetails.purchase?.status === "paid" &&
+      purchaseDetails.purchase?.paid === true
     );
   };
 
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
+
 
    const appFeatures = [
     "Unlimited CSV file uploads and conversions",
@@ -137,13 +123,13 @@ export default function PricingTable({
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
             <Badge className="bg-foreground text-background px-4 py-1 text-sm">Best Value</Badge>
           </div>
-          {isCurrentPlan(LIFETIME_TIER) && (
+          {hasPurchasedProduct(LIFETIME_TIER) && (
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
               <Badge
                 variant="secondary"
                 className="bg-primary text-primary-foreground"
               >
-                Current Plan
+                Purchased
               </Badge>
             </div>
           )}
@@ -174,16 +160,16 @@ export default function PricingTable({
             
           </CardContent>
           <CardFooter className="pt-8">
-            {isCurrentPlan(LIFETIME_TIER) ? (
+            {hasPurchasedProduct(LIFETIME_TIER) ? (
               <div className="w-full space-y-3">
                 <Button
                   className="w-full py-6 text-lg"
                   variant="outline"
-                  onClick={handleManageSubscription}
+                  onClick={handleManagePurchase}
                 >
-                  Manage Subscription
+                  Manage Purchase
                 </Button>
-                {subscriptionDetails.subscription && (
+                {purchaseDetails.purchase && (
                   <p className="text-sm text-muted-foreground text-center">
                     Lifetime Access Active
                   </p>

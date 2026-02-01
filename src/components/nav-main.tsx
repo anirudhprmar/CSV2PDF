@@ -2,18 +2,15 @@
 
 import { PlusIcon, type LucideIcon } from "lucide-react"
 import Link from "next/link"
-
+import { usePathname } from "next/navigation"
+import clsx from "clsx"
 
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
-  
 } from "~/components/ui/sidebar"
-import { Button } from "./ui/button"
 
 export function NavMain({
   items,
@@ -24,36 +21,39 @@ export function NavMain({
     icon?: LucideIcon
   }[]
 }) {
+  const pathname = usePathname()
+
   return (
     <SidebarGroup>
-       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-2">
-            <SidebarMenuButton
-              tooltip="Quick Create"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear"
+      <SidebarGroupContent>
+        <SidebarMenu className="space-y-1">
+          <SidebarMenuItem>
+            <Link
+              href="/preview"
+              className="flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
             >
-              <PlusIcon />
+              <PlusIcon className="h-5 w-5 shrink-0" />
               <span>Preview file</span>
-            </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
-        </SidebarMenu>
 
-      <SidebarMenu>
-        {items.map((item) => (
-         
+          {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span><Link href={item.url}>
-                    {item.title}
-                  </Link>
-                    </span>
-                </SidebarMenuButton>
+              <Link
+                href={item.url}
+                className={clsx(
+                  "flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium transition-all",
+                  pathname === item.url
+                    ? "bg-primary/10 text-primary hover:bg-primary/20"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                {item.icon && <item.icon className="h-5 w-5 shrink-0" />}
+                <span>{item.title}</span>
+              </Link>
             </SidebarMenuItem>
-          
-        ))}
-      </SidebarMenu>
+          ))}
+        </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
   )

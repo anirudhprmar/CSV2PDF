@@ -6,55 +6,53 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { getSubscriptionDetails } from "~/lib/subscription";
+import { getPurchaseDetails } from "~/lib/one_time_purchase";
 import Link from "next/link";
-import ManageSubscription from "./_component/manage-subscription"
 
 export default async function PaymentPage() {
-  const subscriptionDetails = await getSubscriptionDetails();
+  const purchaseDetails = await getPurchaseDetails();
 
   return (
     <div>
       <div className="p-6 space-y-4">
         <div className="relative min-h-100 overflow-y-hidden">
-          {!subscriptionDetails.hasSubscription ||
-          subscriptionDetails.subscription?.status !== "active" ? (
+          {!purchaseDetails.hasPurchased ||
+          purchaseDetails.purchase?.status !== "paid" ? (
             <>
               <div className="absolute inset-0 z-10 rounded-lg top-40 flex items-center justify-center">
                 <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-lg text-center max-w-md">
                   <h3 className="text-xl font-semibold mb-2">
-                    Subscription Required
+                    Purchase Required
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    You need an active subscription to access payment management
-                    features.
+                    You need to purchase lifetime access to view payment details.
                   </p>
                   <Link href="/pricing">
-                    <Button>Subscribe Now</Button>
+                    <Button>Get Lifetime Access</Button>
                   </Link>
                 </div>
               </div>
               <div className="blur-sm pointer-events-none">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Payment Management</CardTitle>
+                    <CardTitle>Payment Details</CardTitle>
                     <CardDescription>
-                      Manage your billing and payment methods
+                      View your purchase information
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Current Plan
+                          Status
                         </p>
-                        <p className="text-md">Pro Plan</p>
+                        <p className="text-md">Active</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">
-                          Billing Status
+                          Amount
                         </p>
-                        <p className="text-md">Active</p>
+                        <p className="text-md">$5.00</p>
                       </div>
                     </div>
                   </CardContent>
@@ -64,9 +62,9 @@ export default async function PaymentPage() {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Subscription Details</CardTitle>
+                <CardTitle>Purchase Details</CardTitle>
                 <CardDescription>
-                  Your current subscription information
+                  Your lifetime access purchase information
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -76,46 +74,41 @@ export default async function PaymentPage() {
                       Status
                     </p>
                     <p className="text-md capitalize">
-                      {subscriptionDetails.subscription.status}
+                      {purchaseDetails.purchase.status}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-muted-foreground">
-                      Amount
+                      Amount Paid
                     </p>
                     <p className="text-md">
-                      {subscriptionDetails.subscription.amount / 100}{" "}
-                      {subscriptionDetails.subscription.currency.toUpperCase()}
+                      {(purchaseDetails.purchase.totalAmount / 100).toFixed(2)}{" "}
+                      {purchaseDetails.purchase.currency.toUpperCase()}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-muted-foreground">
-                      Billing Interval
+                      Payment Type
                     </p>
                     <p className="text-md capitalize">
-                      {subscriptionDetails.subscription.recurringInterval}
+                      One-Time Purchase
                     </p>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-muted-foreground">
-                      Current Period End
+                      Access Level
                     </p>
                     <p className="text-md">
-                      {new Date(
-                        subscriptionDetails.subscription.currentPeriodEnd,
-                      ).toLocaleDateString()}
+                      Lifetime
                     </p>
                   </div>
                 </div>
-                {subscriptionDetails.subscription.cancelAtPeriodEnd && (
-                  <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                    <p className="text-sm text-yellow-800">
-                      Your subscription will cancel at the end of the current
-                      billing period.
-                    </p>
-                  </div>
-                )}
-                <ManageSubscription />
+                
+                <div className="p-4 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
+                  <p className="text-sm text-green-800 dark:text-green-200">
+                    ✓ You have lifetime access to all features. No recurring payments required.
+                  </p>
+                </div>
               </CardContent>
             </Card>
           )}

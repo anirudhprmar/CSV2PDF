@@ -69,14 +69,11 @@ export const verification = pgTable("verification", {
 });
 
 export const one_time_purchase = pgTable("one_time_purchase",{
-  // Primary order fields
   id: text("id").primaryKey(),
   createdAt: timestamp("createdAt").notNull(),
   modifiedAt: timestamp("modifiedAt"),
-  status: text("status").notNull(), // "paid", "pending", "failed", etc.
+  status: text("status").notNull(),
   paid: boolean("paid").notNull().default(false),
-
-  // Amount breakdown fields
   subtotalAmount: integer("subtotalAmount").notNull(),
   discountAmount: integer("discountAmount").default(0),
   netAmount: integer("netAmount").notNull(),
@@ -85,51 +82,20 @@ export const one_time_purchase = pgTable("one_time_purchase",{
   refundedAmount: integer("refundedAmount").default(0),
   refundedTaxAmount: integer("refundedTaxAmount").default(0),
   currency: text("currency").notNull(),
-  
-  // Billing information
   billingReason: text("billingReason").default("purchase"),
   billingName: text("billingName"),
-  billingAddress: text("billingAddress"), // JSON string for address object
+  billingAddress: text("billingAddress"),
   isInvoiceGenerated: boolean("isInvoiceGenerated").default(false),
-  
-  // Relationship fields
   customerId: text("customerId").notNull(),
   productId: text("productId").notNull(),
   discountId: text("discountId"),
-  subscriptionId: text("subscriptionId"), // Can be null for one-time purchases
+  subscriptionId: text("subscriptionId"), 
   checkoutId: text("checkoutId").notNull(),
   userId: text("userId").references(() => user.id),
-  
-  // Additional data
-  metadata: text("metadata"), // JSON string
-  customFieldData: text("customFieldData"), // JSON string
+  metadata: text("metadata"), 
+  customFieldData: text("customFieldData"), 
 });
 
-export const subscription = pgTable("subscription",{
-  id: text("id").primaryKey(),
-  createdAt: timestamp("createdAt").notNull(),
-  modifiedAt: timestamp("modifiedAt"),
-  amount: integer("amount").notNull(),
-  currency: text("currency").notNull(),
-  recurringInterval: text("recurringInterval").notNull(),
-  status: text("status").notNull(),
-  currentPeriodStart: timestamp("currentPeriodStart").notNull(),
-  currentPeriodEnd: timestamp("currentPeriodEnd").notNull(),
-  cancelAtPeriodEnd: boolean("cancelAtPeriodEnd").notNull().default(false),
-  canceledAt: timestamp("canceledAt"),
-  startedAt: timestamp("startedAt").notNull(),
-  endsAt: timestamp("endsAt"),
-  endedAt: timestamp("endedAt"),
-  customerId: text("customerId").notNull(),
-  productId: text("productId").notNull(),
-  discountId: text("discountId"),
-  checkoutId: text("checkoutId").notNull(),
-  customerCancellationReason: text("customerCancellationReason"),
-  customerCancellationComment: text("customerCancellationComment"),
-  metadata: text("metadata"), // JSON string
-  customFieldData: text("customFieldData"), // JSON string
-  userId: text("userId").references(() => user.id),
-});
 
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
