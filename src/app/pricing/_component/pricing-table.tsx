@@ -17,40 +17,19 @@ import { type RefObject } from "react";
 import { env } from "~/env";
 import { api } from "~/lib/api";
 
-type PurchaseDetails = {
-  id: string;
-  productId: string;
-  status: string;
-  totalAmount: number;
-  currency: string;
-  paid: boolean;
-  refundedAmount: number | null;
-  refundedTaxAmount: number | null;
-  isInvoiceGenerated: boolean | null;
-  organizationId: string | null;
-};
-
-type PurchaseDetailsResult = {
-  hasPurchased: boolean;
-  purchase?: PurchaseDetails;
-  error?: string;
-  errorType?: "REFUNDED" | "PENDING" | "GENERAL";
-};
-
-interface PricingTableProps {
-  purchaseDetails: PurchaseDetailsResult;
-}
-
 interface props {
   ref?: RefObject<HTMLElement | null>;
 }
 
-export default function PricingTable({
-  ref,
-  purchaseDetails
-}: props & PricingTableProps) {
+export default function PricingTable({ ref }: props) {
   const router = useRouter();
-  const { data: isAuthenticatedData, isLoading } = api.user.isAuthenticated.useQuery();
+  
+  // Use tRPC hooks for data fetching
+  const { data: isAuthenticatedData, isLoading: isAuthLoading } = api.user.isAuthenticated.useQuery();
+  const { data: purchaseDetails, isLoading: isPurchaseLoading } = api.payment.getPurchaseDetails.useQuery(undefined, {
+    retry: 1,
+    staleTime: 5000,
+  });
   
   // Use the tRPC data directly, fallback to false if undefined
   const isAuthenticated = isAuthenticatedData ?? false;
@@ -90,6 +69,8 @@ export default function PricingTable({
   }
 
   const hasPurchasedProduct = (tierProductId: string) => {
+    if (!purchaseDetails) return false;
+    
     return (
       purchaseDetails.hasPurchased &&
       purchaseDetails.purchase?.productId === tierProductId &&
@@ -121,18 +102,8 @@ export default function PricingTable({
 
         <Card className="relative border-2 border-dashed ">
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-            <Badge className="bg-foreground text-background px-4 py-1 text-sm">Best Value</Badge>
+            <Badge className="bg-foreground text-background px-4 py-1 text-sm">{hasPurchasedProduct(LIFETIME_TIER) ? "Purchased" : "Best Value"}</Badge>
           </div>
-          {hasPurchasedProduct(LIFETIME_TIER) && (
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
-              <Badge
-                variant="secondary"
-                className="bg-primary text-primary-foreground"
-              >
-                Purchased
-              </Badge>
-            </div>
-          )}
           <CardHeader className="text-center pt-10 pb-8">
             <CardTitle className="text-2xl font-semibold">Lifetime Access</CardTitle>
 
@@ -169,7 +140,7 @@ export default function PricingTable({
                 >
                   Manage Purchase
                 </Button>
-                {purchaseDetails.purchase && (
+                {purchaseDetails?.purchase && (
                   <p className="text-sm text-muted-foreground text-center">
                     Lifetime Access Active
                   </p>

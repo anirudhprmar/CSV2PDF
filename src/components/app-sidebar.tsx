@@ -1,4 +1,3 @@
-"use client"
 import * as React from "react"
 
 import { NavMain } from "~/components/nav-main"
@@ -12,33 +11,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
-import { LayoutIcon } from "lucide-react"
 import { NavSecondary } from "./nav-secondary"
-import { IconSettings, IconCreditCardPay } from "@tabler/icons-react"
+
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/dashboard",
-      icon: LayoutIcon,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/dashboard/settings",
-      icon: IconSettings,
-    },
-    {
-      title: "Payment",
-      url: "/dashboard/payment",
-      icon: IconCreditCardPay,
-    },
-  ],
-}
 
 export function AppSidebar({ ...props }: AppSidebarProps) {
   return (
@@ -55,8 +32,8 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="flex flex-col justify-between">
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain/>
+        <NavSecondary className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

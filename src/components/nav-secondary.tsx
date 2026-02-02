@@ -5,6 +5,7 @@ import { type Icon } from "@tabler/icons-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import clsx from "clsx"
+import { IconSettings } from "@tabler/icons-react"
 
 import {
   SidebarGroup,
@@ -14,37 +15,28 @@ import {
 } from "~/components/ui/sidebar"
 
 export function NavSecondary({
-  items,
   ...props
-}: {
-  items: {
-    title: string
-    url: string
-    icon: Icon
-  }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+}: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const pathname = usePathname()
 
   return (
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu className="space-y-1">
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
+            <SidebarMenuItem >
               <Link
-                href={item.url}
+                href={"/dashboard/settings"}
                 className={clsx(
-                  "flex items-center gap-3 w-full rounded-lg px-3 py-2 text-sm font-medium transition-all",
-                  pathname === item.url
+                  "flex items-center gap-3 w-full rounded-none px-3 py-2 text-sm font-medium transition-all",
+                  pathname === "/dashboard/settings"
                     ? "bg-primary/10 text-primary hover:bg-primary/20"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
-                <item.icon className="h-5 w-5 shrink-0" />
-                <span>{item.title}</span>
+                <IconSettings className="h-5 w-5 shrink-0" />
+                <span>{"Settings"}</span>
               </Link>
             </SidebarMenuItem>
-          ))}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

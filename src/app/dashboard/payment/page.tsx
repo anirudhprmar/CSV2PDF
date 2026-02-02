@@ -6,17 +6,18 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { getPurchaseDetails } from "~/lib/one_time_purchase";
+import { api } from "~/trpc/server";
 import Link from "next/link";
 
 export default async function PaymentPage() {
-  const purchaseDetails = await getPurchaseDetails();
+
+  const purchaseDetails = await api.payment.getPurchaseDetails();
 
   return (
     <div>
       <div className="p-6 space-y-4">
         <div className="relative min-h-100 overflow-y-hidden">
-          {!purchaseDetails.hasPurchased ||
+          {!purchaseDetails?.hasPurchased ||
           purchaseDetails.purchase?.status !== "paid" ? (
             <>
               <div className="absolute inset-0 z-10 rounded-lg top-40 flex items-center justify-center">
