@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { authClient } from "~/server/better-auth/client";
-import { ChevronsUpDown, CreditCard } from "lucide-react";
+import { ChevronsUpDown, CreditCard, Receipt } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -84,9 +84,9 @@ export default function UserProfile({ userInfo, paymentStatus }: UserProfileProp
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
          <DropdownMenuGroup>
-          <Link href="/dashboard/pricing">
+          <Link href="/pricing">
             <DropdownMenuItem>
-              <CreditCard className="mr-2 h-4 w-4" />
+              <Receipt className=" h-4 w-4" />
               Manage Order
             </DropdownMenuItem>
           </Link>

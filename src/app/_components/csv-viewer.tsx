@@ -17,7 +17,7 @@ import { Input } from "~/components/ui/input";
 import Papa from "papaparse";
 import { api } from "~/lib/api";
 import { fileStorage } from "~/lib/db";
-
+import { clearUploadedFile } from "~/lib/csvStorage";
 import { toast } from "sonner";
 import LoginDialog from "./login-dialog";
 
@@ -41,7 +41,7 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   // Worker removed in favor of Server-Side generation
 
   // Check if user is authenticated
-  const { data: userInfo } = api.user.getProfile.useQuery(undefined, {
+  const { data: userInfo, isLoading: isAuthLoading } = api.user.getProfile.useQuery(undefined, {
     retry: false,
     refetchOnWindowFocus: false,
   });
@@ -189,7 +189,26 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
     }
   };
 
+  const handleClear = async () => {
+    if (isAuthLoading) {
+      toast.info("Checking authentication...");
+      return;
+    }
 
+    try {
+      await clearUploadedFile();
+      toast.success("File cleared");
+      
+      if (isAuthenticated) {
+        router.push("/dashboard");
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Failed to clear file:", error);
+      toast.error("Failed to clear file");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -278,7 +297,9 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
               ) : (
                 <LoginDialog/>
               )}
-
+              <Button onClick={handleClear} variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                 Clear File
+              </Button>
               <Button onClick={handleBack} variant="ghost" size="sm">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}

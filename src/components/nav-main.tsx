@@ -23,11 +23,11 @@ export function NavMain() {
         <SidebarMenu className="space-y-1">
           <SidebarMenuItem>
             <Link
-              href="/preview"
+              href="/dashboard/upload"
               className="flex items-center gap-3 w-full rounded-none px-3 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-all"
             >
               <PlusIcon className="h-5 w-5 shrink-0" />
-              <span>Preview File</span>
+              <span>Upload New File</span>
             </Link>
           </SidebarMenuItem>
 

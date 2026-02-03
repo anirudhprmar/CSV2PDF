@@ -13,7 +13,7 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-6"
         />
-        <h1 className="text-base font-medium">{pathname === "/dashboard" ? "All Documents": "Settings"}</h1>
+        <h1 className="text-base font-medium">{pathname === "/dashboard" ? "All Documents": pathname.split('/')[2] }</h1>
       </div>
     </header>
   )
