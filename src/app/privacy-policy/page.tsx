@@ -30,7 +30,7 @@ export default function PrivacyPolicy() {
                     1. Introduction
                   </h2>
                   <p className="leading-relaxed">
-                    Welcome to CSV Viewer & Converter (&apos;we,&apos; &apos;our,&apos; or
+                    Welcome to CSV2PDF (&apos;we,&apos; &apos;our,&apos; or
                     &apos;us&apos;). We are committed to protecting your personal
                     information and your right to privacy. This Privacy Policy
                     explains how we collect, use, disclose, and safeguard your

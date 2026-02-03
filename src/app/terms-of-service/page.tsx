@@ -30,7 +30,7 @@ export default function TermsOfService() {
                     1. Acceptance of Terms
                   </h2>
                   <p className="leading-relaxed">
-                    By accessing or using CSV Viewer & Converter (&apos;the Service&apos;), you
+                    By accessing or using CSV2PDF (&apos;the Service&apos;), you
                     agree to be bound by these Terms of Service. If you do not
                     agree to all these terms, you may not access or use the
                     Service.
@@ -42,7 +42,7 @@ export default function TermsOfService() {
                     2. Description of Service
                   </h2>
                   <p className="leading-relaxed">
-                    CSV Viewer & Converter is a powerful tool designed to help you view CSV files and convert them into professionally formatted PDF documents. 
+                    CSV2PDF is a powerful tool designed to help you view CSV files and convert them into professionally formatted PDF documents. 
                     Unlike traditional web tools, our Service prioritizes your privacy by processing files locally on your device using web technologies like Dexie.js. 
                     This means your sensitive CSV data is never uploaded to our servers; it stays securely on your computer. 
                     We provide features to customize the view, manage your conversion history locally, and export documents efficiently.
@@ -73,7 +73,7 @@ export default function TermsOfService() {
                   </h2>
                   <div className="space-y-3">
                     <p className="leading-relaxed">
-                      CSV Viewer & Converter is available for a <strong>one-time payment of $5 (USD)</strong>.
+                      CSV2PDF is available for a <strong>one-time payment of $5 (USD)</strong>.
                     </p>
                     <ul className="list-disc list-inside space-y-1 ml-4">
                       <li>
@@ -138,7 +138,7 @@ export default function TermsOfService() {
                     </h3>
                     <p className="leading-relaxed">
                       The Service and its original content, features, and
-                      functionality are owned by CSV Viewer & Converter and are protected by
+                      functionality are owned by CSV2PDF and are protected by
                       international copyright, trademark, patent, trade secret,
                       and other intellectual property laws.
                     </p>
@@ -197,7 +197,7 @@ export default function TermsOfService() {
                     9. Limitation of Liability
                   </h2>
                   <p className="leading-relaxed uppercase font-medium">
-                    To the maximum extent permitted by law, CSV Viewer & Converter shall not
+                    To the maximum extent permitted by law, CSV2PDF shall not
                     be liable for any indirect, incidental, special,
                     consequential, or punitive damages, or any loss of profits or
                     revenues, whether incurred directly or indirectly, or any loss
@@ -224,7 +224,7 @@ export default function TermsOfService() {
                     10. Indemnification
                   </h2>
                   <p className="leading-relaxed">
-                    You agree to defend, indemnify, and hold harmless CSV Viewer & Converter
+                    You agree to defend, indemnify, and hold harmless CSV2PDF
                     and its affiliates, officers, directors, employees, and agents
                     from and against any claims, liabilities, damages, judgments,
                     awards, losses, costs, expenses, or fees arising out of or
@@ -286,7 +286,7 @@ export default function TermsOfService() {
 
                 <section className="pt-8 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
-                    By using CSV Viewer & Converter, you acknowledge that you have read,
+                    By using CSV2PDF, you acknowledge that you have read,
                     understood, and agree to be bound by these Terms of Service.
                   </p>
                 </section>

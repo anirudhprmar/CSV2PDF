@@ -5,7 +5,26 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const coreConfig = {};
+const coreConfig = {
+  async rewrites() {
+    return [
+      {
+        source: "/ingest/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/ingest/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/ingest/decide",
+        destination: "https://us.i.posthog.com/decide",
+      },
+    ];
+  },
+  // Required to prevent ad-blockers from blocking the ingest
+  skipTrailingSlashRedirect: true,
+};
 
 
 import { withSentryConfig } from "@sentry/nextjs";
@@ -15,7 +34,7 @@ const config = withSentryConfig(coreConfig,{
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
   org: "anirudhs-software",
-  project: "javascript-nextjs",
+  project: "csv2pdf",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
