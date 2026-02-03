@@ -325,7 +325,7 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
                       disabled={isDownloading}
                     >
                       <Download className="mr-2 h-4 w-4" />
-                      {isDownloading ? "Generating..." : "Download PDF"}
+                      {isDownloading ? `Generating... ${progress}%` : "Download PDF"}
                     </Button>
                           
                   </div>
