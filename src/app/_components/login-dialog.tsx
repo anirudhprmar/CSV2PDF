@@ -15,33 +15,54 @@ import { cn } from "~/lib/utils"
 import { authClient } from "~/server/better-auth/client"
 import { toast } from "sonner";
 
+interface LoginDialogProps {
+  open?: boolean;
+  onClose?: () => void;
+  children?: React.ReactNode;
+}
 
-
-export default function LoginDialog() {
+export default function LoginDialog({ open, onClose, children }: LoginDialogProps) {
     const [loading, setLoading] = useState(false);
+    const [internalOpen, setInternalOpen] = useState(false);
     const searchParams = useSearchParams();
     const returnTo = searchParams.get("returnTo");
     
+    // Use controlled state if props provided, otherwise use internal state
+    const isOpen = open !== undefined ? open : internalOpen;
+    const handleOpenChange = (newOpen: boolean) => {
+      if (open !== undefined && onClose) {
+        if (!newOpen) onClose();
+      } else {
+        setInternalOpen(newOpen);
+      }
+    };
+    
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="flex items-center justify-center gap-3">
-        <Button variant="outline" size={'sm'}>
-            <Save className="mr-2 h-4 w-4" />            
-            Save
-        </Button>
-        <Button variant="default" size={'sm'}>
-            <Download className="mr-2 h-4 w-4" />            
-            Download PDF
-        </Button>
-        </div>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {children ? (
+        <DialogTrigger asChild>
+          {children}
+        </DialogTrigger>
+      ) : open === undefined ? (
+        <DialogTrigger asChild>
+          <div className="flex items-center justify-center gap-3">
+            <Button variant="outline" size={'sm'}>
+              <Save className="mr-2 h-4 w-4" />            
+              Save
+            </Button>
+            <Button variant="default" size={'sm'}>
+              <Download className="mr-2 h-4 w-4" />            
+              Download PDF
+            </Button>
+          </div>
+        </DialogTrigger>
+      ) : null}
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Login</DialogTitle>
           <DialogDescription>
             To proceed with your document, please create an account          
-            </DialogDescription>
+          </DialogDescription>
         </DialogHeader>
         <div>
             <Button

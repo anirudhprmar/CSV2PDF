@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import Papa from "papaparse";
-import { api } from "~/lib/api";
 import { fileStorage } from "~/lib/db";
 import { clearUploadedFile } from "~/lib/csvStorage";
 import { toast } from "sonner";
@@ -30,9 +29,16 @@ import LoginDialog from "./login-dialog";
 interface CsvViewerProps {
   file: File;
   onClose: () => void;
+  isAuthenticated: boolean;
+  hasPurchased: boolean;
 }
 
-export default function CsvViewer({ file, onClose }: CsvViewerProps) {
+export default function CsvViewer({ 
+  file, 
+  onClose, 
+  isAuthenticated, 
+  hasPurchased 
+}: CsvViewerProps) {
   const router = useRouter();
   const [csvData, setCsvData] = useState<string[][]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,21 +47,9 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [showLoginDialog, setShowLoginDialog] = useState(false);
 
   const parentRef = useRef<HTMLDivElement>(null);
-
-  // Check if user is authenticated
-  const { data: userInfo, isLoading: isAuthLoading } = api.user.getProfile.useQuery(undefined, {
-    retry: false,
-    refetchOnWindowFocus: false,
-  });
-  const isAuthenticated = !!userInfo;
-
-  // Check if user has purchased
-  const { data: hasPurchased, isLoading: isPaymentLoading } = api.payment.hasUserPurchased.useQuery(undefined, {
-    enabled: isAuthenticated,
-    retry: false,
-  });
 
   // Parse CSV file using PapaParse
   useEffect(() => {
@@ -89,14 +83,8 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
 
   const handleSaveToDatabase = async () => {
     if (!isAuthenticated) {
-      toast.error("Please sign in to save files");
-      router.push("/pricing");
+      setShowLoginDialog(true);
       return;
-    }
-
-    if (isPaymentLoading) {
-        toast.info("Checking subscription status...");
-        return;
     }
 
     if (!hasPurchased) {
@@ -139,13 +127,7 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
 
   const downloadAsPdf = async () => {
     if (!isAuthenticated) {
-      toast.error("Please sign in to download PDF");
-      router.push("/pricing");
-      return;
-    }
-
-    if (isPaymentLoading) {
-      toast.info("Checking subscription status...");
+      setShowLoginDialog(true);
       return;
     }
 
@@ -224,11 +206,6 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   };
 
   const handleClear = async () => {
-    if (isAuthLoading) {
-      toast.info("Checking authentication...");
-      return;
-    }
-
     try {
       await clearUploadedFile();
       toast.success("File cleared");
@@ -403,6 +380,12 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
           </div>
         </div>
       </div>
+
+      {/* Login Dialog for unauthenticated users */}
+      <LoginDialog 
+        open={showLoginDialog} 
+        onClose={() => setShowLoginDialog(false)} 
+      />
     </div>
   );
 }
