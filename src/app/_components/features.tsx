@@ -1,3 +1,7 @@
+"use client";
+
+import { Fragment } from "react";
+import { motion } from "motion/react";
 
 export default function Features() {
     const featuresList = [
@@ -8,12 +12,23 @@ export default function Features() {
   return (
     <section className="p-5">
       <div className="mx-auto">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3 relative">
+        <div className="grid grid-cols-1 md:gap-8 md:grid-cols-3 relative py-8 md:py-0">
           {featuresList.map((feature, index) => (
-            <div key={index} className="flex flex-col items-start space-y-2">
-              <h3 className="text-xl font-semibold">{feature.title}</h3>
-              <p className="mt-2 text-muted-foreground">{feature.descripition}</p>
-            </div>
+            <Fragment key={index}>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="flex flex-col items-start space-y-2"
+              >
+                <h3 className="text-xl font-semibold">{feature.title}</h3>
+                <p className="mt-2 text-muted-foreground">{feature.descripition}</p>
+              </motion.div>
+              {index < featuresList.length - 1 && (
+                <div className="w-full border-t border-dashed border-neutral-300 dark:border-neutral-800 md:hidden my-6" />
+              )}
+            </Fragment>
           ))}
           {/* Vertical dividers positioned absolutely relative to grid */}
           <div className="hidden md:block absolute top-0 bottom-0 left-[33.33%] w-px border-r border-dashed border-neutral-300 dark:border-neutral-800 -my-5 h-[calc(100%+2.5rem)]"/>

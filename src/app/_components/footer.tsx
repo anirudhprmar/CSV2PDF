@@ -18,7 +18,7 @@ export default function Footer() {
   return (
     <footer className="p-5">
       <div className="mx-auto max-w-6xl">
-        <div className="flex flex-col md:flex-row items-start justify-between py-5 pb-5">
+        <div className="flex flex-col md:flex-row items-start justify-between py-5 pb-5 gap-10">
             <div className="space-y-4">
                 <h3 className="text-lg font-semibold">CSV2PDF</h3>
                 <p className="text-muted-foreground text-sm">
@@ -39,7 +39,7 @@ export default function Footer() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 ">
+            <div className="grid grid-cols-2 gap-8 md:grid-cols-2 md:gap-5 w-full md:w-auto">
 
             {/* Quick Links Section */}
             <div className="space-y-4">
@@ -67,6 +67,22 @@ export default function Footer() {
                     className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
                     FAQ
+                    </Link>
+                </li>
+                  <li>
+                    <Link
+                    href="#demo"
+                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                    >
+                    Demo
+                    </Link>
+                </li>
+                  <li>
+                    <Link
+                    href="/blog"
+                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                    >
+                    Blog
                     </Link>
                 </li>
                 </ul>

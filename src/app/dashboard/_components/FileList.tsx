@@ -58,7 +58,7 @@ export function FileList() {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
+        <TabsList className="inline-flex w-auto">
           <TabsTrigger value="recent">Recent</TabsTrigger>
         </TabsList>
 

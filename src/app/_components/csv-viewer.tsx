@@ -12,8 +12,14 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { Download, FileText, Search, Filter, Save, ArrowLeft } from "lucide-react";
+import { Download, FileText, Search, Filter, Save, ArrowLeft, MoreVertical, Trash2 } from "lucide-react";
 import { Input } from "~/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import Papa from "papaparse";
 import { api } from "~/lib/api";
 import { fileStorage } from "~/lib/db";
@@ -271,39 +277,79 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
               </div>
             </div>
             <div className="flex items-center space-x-2">
-              {isAuthenticated ? (
-                <div className="flex items-center justify-center gap-3">
-                  <Button 
-                    onClick={handleSaveToDatabase} 
-                    variant="outline" 
-                    size="sm"
-                    disabled={isSaving}
-                  >
-                    <Save className="mr-2 h-4 w-4" />
-                    {isSaving ? "Saving..." : "Save to Dashboard"}
+              {/* Desktop Actions */}
+              <div className="hidden md:flex items-center gap-2">
+                  {isAuthenticated ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <Button 
+                        onClick={handleSaveToDatabase} 
+                        variant="outline" 
+                        size="sm"
+                        disabled={isSaving}
+                      >
+                        <Save className="mr-2 h-4 w-4" />
+                        {isSaving ? "Saving..." : "Save to Dashboard"}
+                      </Button>
+                      
+                      <Button 
+                        onClick={downloadAsPdf} 
+                        variant="default" 
+                        size="sm"
+                        disabled={isDownloading}
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        {isDownloading ? "Generating..." : "Download PDF"}
+                      </Button>
+                            
+                    </div>
+                  ) : (
+                    <LoginDialog/>
+                  )}
+                  <Button onClick={handleClear} variant="outline" size="sm" className="text-destructive hover:text-destructive">
+                    Clear File
                   </Button>
-                  
-                  <Button 
-                    onClick={downloadAsPdf} 
-                    variant="default" 
-                    size="sm"
-                    disabled={isDownloading}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    {isDownloading ? "Generating..." : "Download PDF"}
+                  <Button onClick={handleBack} variant="ghost" size="sm">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}
                   </Button>
-                        
-                </div>
-              ) : (
-                <LoginDialog/>
-              )}
-              <Button onClick={handleClear} variant="outline" size="sm" className="text-destructive hover:text-destructive">
-                 Clear File
-              </Button>
-              <Button onClick={handleBack} variant="ghost" size="sm">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}
-              </Button>
+              </div>
+
+              {/* Mobile Actions Dropdown */}
+              <div className="md:hidden">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <MoreVertical className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    {isAuthenticated ? (
+                      <>
+                        <DropdownMenuItem onClick={handleSaveToDatabase} disabled={isSaving}>
+                           <Save className="mr-2 h-4 w-4" />
+                           Save
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={downloadAsPdf} disabled={isDownloading}>
+                           <Download className="mr-2 h-4 w-4" />
+                           Download PDF
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                       <div className="p-2">
+                          <LoginDialog/>
+                       </div>
+                    )}
+                    <DropdownMenuItem onClick={handleClear} className="text-destructive">
+                       <Trash2 className="mr-2 h-4 w-4" />
+                       Clear File
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleBack}>
+                       <ArrowLeft className="mr-2 h-4 w-4" />
+                       Back
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
 

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Accordion,
@@ -5,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
+import { motion } from "motion/react";
 
 export default function FAQs() {
   const faqs = [
@@ -36,7 +39,13 @@ export default function FAQs() {
 
   return (
     <section className="p-5">
-      <div className="mx-auto max-w-3xl">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.5 }}
+        className="mx-auto max-w-3xl"
+      >
         <div className="mb-8 text-center">
           <h2 className="text-3xl font-semibold tracking-tight">
             Frequently Asked Questions
@@ -61,7 +70,7 @@ export default function FAQs() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
+      </motion.div>
     </section>
   );
 }

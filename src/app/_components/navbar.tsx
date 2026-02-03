@@ -10,7 +10,7 @@ export default function Navbar() {
         <nav className="flex items-center justify-between p-5">
           <div className="font-bold text-xl">CSV2PDF</div>
           <div className="flex items-center justify-center gap-4 text-md">
-            <ul className="flex items-center justify-center gap-3 text-muted-foreground">
+            <ul className="hidden md:flex items-center justify-center gap-3 text-muted-foreground">
               <li className="hover:text-foreground cursor-pointer transition-colors">Demo</li>
               <li className="hover:text-foreground cursor-pointer transition-colors">Pricing</li>
               <li className="hover:text-foreground cursor-pointer transition-colors">FAQ&apos;s</li>

@@ -51,7 +51,8 @@ export function FileCard({
           
           <div className="flex-1 min-w-0">
             <h3 className="font-medium text-foreground truncate">{fileName}</h3>
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>{formatFileSize(fileSize)}</span>
               <span>•</span>
               <span>Opened {formatDistanceToNow(new Date(lastAccessedAt), { addSuffix: true })}</span>
@@ -59,7 +60,7 @@ export function FileCard({
           </div>
         </Link>
 
-        <div>
+        <div className="flex items-center gap-2">
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

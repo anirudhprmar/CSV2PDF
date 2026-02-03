@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import { motion } from "motion/react";
 
 export default function FooterCTA() {
   return (
     <section className="p-5">
       <div className="mx-auto max-w-4xl">
-        <div className="flex flex-col items-center justify-center gap-6 rounded-lg border-2 border-dashed bg-muted/20 px-6 py-16 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center justify-center gap-6 rounded-lg border-2 border-dashed bg-muted/20 px-6 py-16 text-center"
+        >
           <div className="max-w-2xl space-y-4">
             <h2 className="text-3xl font-semibold tracking-tight md:text-4xl">
               Ready to convert your CSV files?
@@ -23,7 +30,7 @@ export default function FooterCTA() {
           <Link href={"/login"}>
             <Button variant={"default"} size={"lg"} className="text-lg shadow-md tracking-tight">Get CSV2PDF</Button>
         </Link>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
