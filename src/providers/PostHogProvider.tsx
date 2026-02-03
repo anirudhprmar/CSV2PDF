@@ -4,7 +4,7 @@ import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useEffect, type ReactNode } from "react";
 import { env } from "~/env";
-import { auth } from "~/server/better-auth";
+import { authClient } from "~/server/better-auth/client";
 
 if (typeof window !== "undefined") {
   posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
@@ -18,28 +18,25 @@ if (typeof window !== "undefined") {
 
 export function PostHogProvider({ children }: { children: ReactNode }) {
   return (
-  <PHProvider client={posthog}>
-    {/* <PHAuthWrapper> */}
-      {children}
-      {/* </PHAuthWrapper> */}
-  </PHProvider>
+    <PHProvider client={posthog}>
+      <PHAuthWrapper>{children}</PHAuthWrapper>
+    </PHProvider>
   );
 }
 
-// async function PHAuthWrapper({ children }: { children: ReactNode }) {
+function PHAuthWrapper({ children }: { children: ReactNode }) {
+  const { data: session } = authClient.useSession();
 
-//   const userInfo = await auth.api.getSession()
+  useEffect(() => {
+    if (session?.user) {
+      posthog.identify(session.user.id, {
+        email: session.user.email,
+        name: session.user.name,
+      });
+    } else {
+      posthog.reset();
+    }
+  }, [session]);
 
-//  useEffect(()=>{
-//    if(userInfo?.user) {
-//     posthog.identify(userInfo.user.id, {
-//       email: userInfo.user.email,
-//       name: userInfo.user.name,
-//     });
-//   }else if(!userInfo?.user) {
-//     posthog.reset();
-//   }
-//  },[])
-
-//   return children;
-// }
+  return <>{children}</>;
+}
