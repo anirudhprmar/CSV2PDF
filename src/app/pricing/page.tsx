@@ -1,9 +1,20 @@
 import PricingTable from "./_component/pricing-table";
+import { api } from "~/trpc/server";
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const isAuthenticated = await api.user.isAuthenticated();
+  
+  let purchaseDetails = null;
+  if (isAuthenticated) {
+    purchaseDetails = await api.payment.getPurchaseDetails();
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full ">
-      <PricingTable />
+      <PricingTable 
+        initialIsAuthenticated={isAuthenticated} 
+        initialPurchaseDetails={purchaseDetails}
+      />
     </div>
   );
 }

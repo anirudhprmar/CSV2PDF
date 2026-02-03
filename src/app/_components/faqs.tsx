@@ -9,14 +9,18 @@ import {
 export default function FAQs() {
   const faqs = [
     {
+      question:"Does this app store my files ?",
+      answer:"No, we don't store any of your files. Everything that is viewed or converted is handled in the browser and is not stored on our servers. Meaning you completely own your data."
+    },
+    {
       question: "Is this app free, or what are the in-app purchase options?",
       answer:
-        "The app is free to use with basic features. We offer premium plans for advanced features like bulk file processing, unlimited conversions, and priority support. Check our pricing section for detailed information about available plans.",
+        "The app is free to use with basic feature like viewing your csv files. We offer premium plans for advanced features like saving your files, unlimited csv to pdf conversions, and priority support. Check our pricing section for detailed information about available plans.",
     },
     {
       question: "Can the app handle large CSV files without crashing?",
       answer:
-        "Yes, our app is optimized to handle large CSV files efficiently. We use advanced chunking and streaming techniques to process files of various sizes. For optimal performance, we recommend files under 100MB for the free tier and unlimited file sizes for premium users.",
+        "Yes, our app is optimized to handle large CSV files efficiently for viewing but for conversion we support files under 4MB. ",
     },
     {
       question: "Can I edit cells, rows, or columns directly in the viewer?",
@@ -26,7 +30,7 @@ export default function FAQs() {
     {
       question: "How do I convert a CSV file to PDF using the app?",
       answer:
-        "Converting your CSV to PDF is simple: First, upload your CSV file using the file picker or drag-and-drop area. Once the file is loaded and displayed in the viewer, click the 'Convert to PDF' button in the toolbar. You can customize the PDF layout options before downloading the final document.",
+        "Converting your CSV to PDF is simple: First, upload your CSV file using the file picker or drag-and-drop area. Once the file is loaded and displayed in the viewer, click the 'Download PDF' button in the toolbar.",
     },
   ];
 

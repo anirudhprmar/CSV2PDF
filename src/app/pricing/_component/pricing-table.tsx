@@ -17,23 +17,27 @@ import { type RefObject } from "react";
 import { env } from "~/env";
 import { api } from "~/lib/api";
 
-interface props {
-  ref?: RefObject<HTMLElement | null>;
+interface PurchaseDetails {
+  hasPurchased: boolean;
+  purchase?: {
+    productId: string;
+    status: string;
+    paid: boolean;
+  } | null;
 }
 
-export default function PricingTable({ ref }: props) {
+interface props {
+  ref?: RefObject<HTMLElement | null>;
+  initialIsAuthenticated: boolean;
+  initialPurchaseDetails: PurchaseDetails | null;
+}
+
+export default function PricingTable({ ref, initialIsAuthenticated, initialPurchaseDetails }: props) {
   const router = useRouter();
   
-  // Use tRPC hooks for data fetching
-  const { data: isAuthenticatedData, isLoading: isAuthLoading } = api.user.isAuthenticated.useQuery();
-  const { data: purchaseDetails, isLoading: isPurchaseLoading } = api.payment.getPurchaseDetails.useQuery(undefined, {
-    retry: 1,
-    staleTime: 5000,
-    enabled: !!isAuthenticatedData,
-  });
-  
-  // Use the tRPC data directly, fallback to false if undefined
-  const isAuthenticated = isAuthenticatedData ?? false;
+  // Use passed props directly
+  const isAuthenticated = initialIsAuthenticated;
+  const purchaseDetails = initialPurchaseDetails;
 
   const handleCheckout = async (productId: string, slug: string) => {
     if (isAuthenticated === false) {
