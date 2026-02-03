@@ -16,8 +16,8 @@ import { Download, FileText, Search, Filter, Save, ArrowLeft } from "lucide-reac
 import { Input } from "~/components/ui/input";
 import Papa from "papaparse";
 import { api } from "~/lib/api";
-import { convertCsvToPdf } from "~/lib/pdfConverter";
 import { fileStorage } from "~/lib/db";
+
 import { toast } from "sonner";
 import LoginDialog from "./login-dialog";
 
@@ -34,8 +34,11 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const parentRef = useRef<HTMLDivElement>(null);
+  
+  // Worker removed in favor of Server-Side generation
 
   // Check if user is authenticated
   const { data: userInfo } = api.user.getProfile.useQuery(undefined, {
@@ -81,59 +84,99 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
     }
 
     setIsSaving(true);
-    try {
-      const headers = csvData[0] || [];
-      const dataRows = csvData.slice(1);
 
-      await fileStorage.addFile({
-        fileName: file.name,
-        fileSize: file.size,
-        rowCount: dataRows.length,
-        columnCount: headers.length,
-        columns: headers,
-        data: dataRows,
-      });
+    // Use setTimeout to allow the UI to update (show loading spinner) before
+    // the heavy serialization task starts on the main thread.
+    setTimeout(async () => {
+      try {
+        const headers = csvData[0] || [];
+        const dataRows = csvData.slice(1);
 
-      toast.success("File saved to dashboard!");
-      
-      // Navigate to dashboard after saving
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
-    } catch (error) {
-      console.error("Failed to save file:", error);
-      toast.error("Failed to save file. Please try again.");
-    } finally {
-      setIsSaving(false);
-    }
+        await fileStorage.addFile({
+          fileName: file.name,
+          fileSize: file.size,
+          rowCount: dataRows.length,
+          columnCount: headers.length,
+          columns: headers,
+          data: dataRows,
+        });
+
+        toast.success("File saved to dashboard!");
+
+        // Navigate to dashboard after saving
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 1000);
+      } catch (error) {
+        console.error("Failed to save file:", error);
+        toast.error("Failed to save file. Please try again.");
+        setIsSaving(false);
+      }
+    }, 50);
   };
 
-  const downloadAsPdf = () => {
+  const downloadAsPdf = async () => {
     if (!isAuthenticated) {
       toast.error("Please sign in to download PDF");
       return;
     }
 
+    // 4MB limit check
+    const MAX_SIZE = 4 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+        toast.error("File is too large for PDF generation (Max 4MB)");
+        return;
+    }
+
     setIsDownloading(true);
+    setProgress(20); 
+
     try {
-      const headers = csvData[0] || [];
-      const dataRows = csvData.slice(1);
+        const headers = csvData[0] || [];
+        const dataRows = csvData.slice(1);
 
-      // Determine orientation based on column count
-      const orientation = headers.length > 6 ? "landscape" : "portrait";
+        const worker = new Worker(new URL("../../workers/pdf.worker.ts", import.meta.url));
 
-      convertCsvToPdf(headers, dataRows, {
-        fileName: file.name.replace(".csv", ".pdf"),
-        orientation,
-        pageSize: "a4",
-      });
+        worker.onmessage = (e: MessageEvent) => {
+            const { status, data, message } = e.data;
+            if (status === "success") {
+                const blob = new Blob([data], { type: "application/pdf" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = file.name.replace(".csv", ".pdf");
+                a.click();
+                URL.revokeObjectURL(url);
+                toast.success("PDF downloaded successfully!");
+                setProgress(100);
+            } else {
+                console.error("Worker error:", message);
+                toast.error("Failed to generate PDF: " + message);
+            }
+            setIsDownloading(false);
+            setProgress(0);
+            worker.terminate();
+        };
 
-      toast.success("PDF downloaded successfully!");
+        worker.onerror = (err) => {
+            console.error("Worker error:", err);
+            toast.error("An error occurred in PDF generation worker");
+            setIsDownloading(false);
+            setProgress(0);
+            worker.terminate();
+        };
+
+        worker.postMessage({
+            headers,
+            rows: dataRows,
+            fileName: file.name.replace(".csv", "")
+        });
+
     } catch (error) {
-      console.error("Failed to generate PDF:", error);
-      toast.error("Failed to generate PDF. Please try again.");
-    } finally {
+      console.error("PDF generation setup failed:", error);
+      toast.error("Failed to start PDF generation");
       setIsDownloading(false);
+      setProgress(0);
     }
   };
 
@@ -145,6 +188,8 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
       onClose();
     }
   };
+
+
 
   if (isLoading) {
     return (
@@ -233,6 +278,7 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
               ) : (
                 <LoginDialog/>
               )}
+
               <Button onClick={handleBack} variant="ghost" size="sm">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}

@@ -12,7 +12,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
   
   const hasPurchased = await api.payment.hasUserPurchased()
 
-  // Show upgrade prompt if user hasn't purchased
   if (!hasPurchased) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">

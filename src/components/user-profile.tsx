@@ -83,6 +83,15 @@ export default function UserProfile({ userInfo, paymentStatus }: UserProfileProp
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
+         <DropdownMenuGroup>
+          <Link href="/dashboard/pricing">
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 h-4 w-4" />
+              Manage Order
+            </DropdownMenuItem>
+          </Link>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
         <DropdownMenuLabel className="text-foreground">Theme</DropdownMenuLabel>
         <div className="flex gap-2 px-2 pb-2">
           <Button

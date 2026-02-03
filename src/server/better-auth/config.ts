@@ -15,8 +15,7 @@ function safeParseDate(value: string | Date | null | undefined): Date | null {
 
 const polarClient = new Polar({
     accessToken: env.POLAR_ACCESS_TOKEN,
-    // server: 'production'
-    server: 'sandbox'
+    server: env.NODE_ENV === "production" ? "production" : "sandbox",
 });
 
 export const auth = betterAuth({

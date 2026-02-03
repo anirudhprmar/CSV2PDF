@@ -1,4 +1,4 @@
-import { createCallerFactory, createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
 import { userRouter } from "~/server/api/routers/user.router";
 import { paymentRouter } from "~/server/api/routers/payment.router";
 
@@ -8,9 +8,6 @@ import { paymentRouter } from "~/server/api/routers/payment.router";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  health: createTRPCRouter({
-    check: publicProcedure.query(() => ({ status: "ok" })),
-  }),
   user: userRouter,
   payment: paymentRouter,
 });

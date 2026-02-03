@@ -29,6 +29,7 @@ export default function PricingTable({ ref }: props) {
   const { data: purchaseDetails, isLoading: isPurchaseLoading } = api.payment.getPurchaseDetails.useQuery(undefined, {
     retry: 1,
     staleTime: 5000,
+    enabled: !!isAuthenticatedData,
   });
   
   // Use the tRPC data directly, fallback to false if undefined
