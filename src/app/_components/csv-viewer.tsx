@@ -43,8 +43,6 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   const [progress, setProgress] = useState(0);
 
   const parentRef = useRef<HTMLDivElement>(null);
-  
-  // Worker removed in favor of Server-Side generation
 
   // Check if user is authenticated
   const { data: userInfo, isLoading: isAuthLoading } = api.user.getProfile.useQuery(undefined, {
@@ -52,6 +50,12 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
     refetchOnWindowFocus: false,
   });
   const isAuthenticated = !!userInfo;
+
+  // Check if user has purchased
+  const { data: hasPurchased, isLoading: isPaymentLoading } = api.payment.hasUserPurchased.useQuery(undefined, {
+    enabled: isAuthenticated,
+    retry: false,
+  });
 
   // Parse CSV file using PapaParse
   useEffect(() => {
@@ -86,6 +90,18 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   const handleSaveToDatabase = async () => {
     if (!isAuthenticated) {
       toast.error("Please sign in to save files");
+      router.push("/pricing");
+      return;
+    }
+
+    if (isPaymentLoading) {
+        toast.info("Checking subscription status...");
+        return;
+    }
+
+    if (!hasPurchased) {
+      toast.error("Please upgrade to Premium to save files");
+      router.push("/pricing"); 
       return;
     }
 
@@ -124,6 +140,18 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
   const downloadAsPdf = async () => {
     if (!isAuthenticated) {
       toast.error("Please sign in to download PDF");
+      router.push("/pricing");
+      return;
+    }
+
+    if (isPaymentLoading) {
+      toast.info("Checking subscription status...");
+      return;
+    }
+
+    if (!hasPurchased) {
+      toast.error("Please upgrade to Premium to download PDF");
+      router.push("/pricing");
       return;
     }
 
@@ -279,32 +307,28 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
             <div className="flex items-center space-x-2">
               {/* Desktop Actions */}
               <div className="hidden md:flex items-center gap-2">
-                  {isAuthenticated ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <Button 
-                        onClick={handleSaveToDatabase} 
-                        variant="outline" 
-                        size="sm"
-                        disabled={isSaving}
-                      >
-                        <Save className="mr-2 h-4 w-4" />
-                        {isSaving ? "Saving..." : "Save to Dashboard"}
-                      </Button>
-                      
-                      <Button 
-                        onClick={downloadAsPdf} 
-                        variant="default" 
-                        size="sm"
-                        disabled={isDownloading}
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        {isDownloading ? "Generating..." : "Download PDF"}
-                      </Button>
-                            
-                    </div>
-                  ) : (
-                    <LoginDialog/>
-                  )}
+                  <div className="flex items-center justify-center gap-2">
+                    <Button 
+                      onClick={handleSaveToDatabase} 
+                      variant="outline" 
+                      size="sm"
+                      disabled={isSaving}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      {isSaving ? "Saving..." : "Save to Dashboard"}
+                    </Button>
+                    
+                    <Button 
+                      onClick={downloadAsPdf} 
+                      variant="default" 
+                      size="sm"
+                      disabled={isDownloading}
+                    >
+                      <Download className="mr-2 h-4 w-4" />
+                      {isDownloading ? "Generating..." : "Download PDF"}
+                    </Button>
+                          
+                  </div>
                   <Button onClick={handleClear} variant="outline" size="sm" className="text-destructive hover:text-destructive">
                     Clear File
                   </Button>
@@ -323,7 +347,6 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    {isAuthenticated ? (
                       <>
                         <DropdownMenuItem onClick={handleSaveToDatabase} disabled={isSaving}>
                            <Save className="mr-2 h-4 w-4" />
@@ -334,11 +357,6 @@ export default function CsvViewer({ file, onClose }: CsvViewerProps) {
                            Download PDF
                         </DropdownMenuItem>
                       </>
-                    ) : (
-                       <div className="p-2">
-                          <LoginDialog/>
-                       </div>
-                    )}
                     <DropdownMenuItem onClick={handleClear} className="text-destructive">
                        <Trash2 className="mr-2 h-4 w-4" />
                        Clear File
