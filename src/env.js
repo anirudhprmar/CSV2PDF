@@ -21,6 +21,7 @@ export const env = createEnv({
       POLAR_SUCCESS_URL:z.string(),
       AUTH_GOOGLE_ID: z.string(),
       AUTH_GOOGLE_SECRET: z.string(),
+      SENTRY_AUTH_TOKEN:z.string()
   },
 
   /**
@@ -55,7 +56,8 @@ export const env = createEnv({
     NEXT_PUBLIC_LIFETIME_ID:process.env.NEXT_PUBLIC_LIFETIME_ID,
     NEXT_PUBLIC_LIFETIME_SLUG:process.env.NEXT_PUBLIC_LIFETIME_SLUG,
     NEXT_PUBLIC_POSTHOG_KEY:process.env.NEXT_PUBLIC_POSTHOG_KEY,
-    NEXT_PUBLIC_POSTHOG_HOST:process.env.NEXT_PUBLIC_POSTHOG_HOST
+    NEXT_PUBLIC_POSTHOG_HOST:process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    SENTRY_AUTH_TOKEN:process.env.SENTRY_AUTH_TOKEN
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

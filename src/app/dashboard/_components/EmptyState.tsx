@@ -16,7 +16,7 @@ export function EmptyState() {
         Upload your first CSV file to get started with viewing and converting to PDF
       </p>
       
-      <Link href="/">
+      <Link href="/dashboard/upload">
         <Button className="mt-6" size="lg">
           <Upload className="mr-2 h-4 w-4" />
           Upload CSV File

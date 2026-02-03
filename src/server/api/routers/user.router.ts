@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { user, one_time_purchase } from "~/server/db/schema";
 import { eq } from "drizzle-orm";
 
@@ -62,16 +66,6 @@ export const userRouter = createTRPCRouter({
 
     return !!purchase && purchase.paid === true;
   }),
-
-  getByEmail: publicProcedure
-    .input(z.object({ email: z.string().email() }))
-    .query(async ({ ctx, input }) => {
-      const userRecord = await ctx.db.query.user.findFirst({
-        where: eq(user.email, input.email),
-      });
-
-      return userRecord;
-    }),
     
   deleteAccount: protectedProcedure.mutation(async ({ ctx }) => {
     await ctx.db.delete(user).where(eq(user.id, ctx.session.user.id));

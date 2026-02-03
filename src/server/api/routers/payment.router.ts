@@ -61,7 +61,11 @@ export const paymentRouter = createTRPCRouter({
         if (activePurchase) {
           // Validate that the purchase has valid payment status
           if (!activePurchase.paid) {
-            console.warn("Active purchase has invalid payment status:", activePurchase);
+            console.warn("Active purchase has invalid payment status:", {
+              id: activePurchase.id,
+              status: activePurchase.status,
+              paid: activePurchase.paid,
+            });
             return {
               hasPurchased: false,
               error: "Invalid purchase data",
@@ -96,7 +100,11 @@ export const paymentRouter = createTRPCRouter({
         if (latestPurchase) {
           // Validate that the purchase has valid payment status
           if (!latestPurchase.paid) {
-            console.warn("Latest purchase has invalid payment status:", latestPurchase);
+            console.warn("Latest purchase has invalid payment status:", {
+              id: latestPurchase.id,
+              status: latestPurchase.status,
+              paid: latestPurchase.paid,
+            });
             return {
               hasPurchased: false,
               error: "Invalid purchase data",
