@@ -11,7 +11,7 @@ if (typeof window !== "undefined") {
     api_host: `${window.location.origin}/ingest`,
     ui_host: "https://us.i.posthog.com",
     person_profiles: "identified_only",
-    capture_pageview: false,
+    capture_pageview: true,
     capture_pageleave: true,
   });
 }
