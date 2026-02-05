@@ -69,22 +69,22 @@ export default function Footer() {
                     FAQ
                     </Link>
                 </li>
-                  <li>
+                  {/* <li>
                     <Link
                     href="#demo"
                     className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
                     Demo
                     </Link>
-                </li>
-                  <li>
+                </li> */}
+                  {/* <li>
                     <Link
                     href="/blog"
                     className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
                     Blog
                     </Link>
-                </li>
+                </li> */}
                 </ul>
             </div>
 

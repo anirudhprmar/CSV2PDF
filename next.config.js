@@ -6,6 +6,22 @@ import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
 const coreConfig = {
+   images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "163jz9wo57.ufs.sh",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        pathname: "/**",
+      }
+    ],
+    // Optimize images for production
+    formats: ["image/avif", "image/webp"],
+  },
   async rewrites() {
     return [
       {

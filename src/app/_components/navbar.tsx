@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
@@ -8,13 +9,21 @@ export default function Navbar() {
   return (
      <header className="w-full relative">
         <nav className="flex items-center justify-between p-5">
-          <div className="font-bold text-xl">CSV2PDF</div>
+          <div className="font-bold text-xl flex items-center gap-2">
+            <Image
+            src="/favicon/android-chrome-192x192.png"
+            alt="Logo"
+            width={30}
+            height={30}
+            className="rounded-sm"
+            />
+            CSV2PDF</div>
           <div className="flex items-center justify-center gap-4 text-md">
             <ul className="hidden md:flex items-center justify-center gap-3 text-muted-foreground">
-              <li className="hover:text-foreground cursor-pointer transition-colors">Demo</li>
+              {/* <li className="hover:text-foreground cursor-pointer transition-colors">Demo</li> */}
               <li className="hover:text-foreground cursor-pointer transition-colors">Pricing</li>
               <li className="hover:text-foreground cursor-pointer transition-colors">FAQ&apos;s</li>
-              <li className="hover:text-foreground cursor-pointer transition-colors">Blogs</li>
+              {/* <li className="hover:text-foreground cursor-pointer transition-colors">Blogs</li> */}
             </ul>
             <Link href={"/login"}>
               <Button variant={"default"} size={"lg"} className="text-lg shadow-md tracking-tight">Login</Button>
