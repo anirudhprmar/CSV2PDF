@@ -11,7 +11,7 @@ export default function Navbar() {
         <nav className="flex items-center justify-between p-5">
           <div className="font-bold text-xl flex items-center gap-2">
             <Image
-            src="/favicon/android-chrome-192x192.png"
+            src="/logo.png"
             alt="Logo"
             width={30}
             height={30}

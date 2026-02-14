@@ -19,7 +19,7 @@ const siteUrl = env.NEXT_PUBLIC_APP_URL;
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "CSV2PDF - View & Convert CSV Files to PDF Instantly",
+    default: "View & Convert CSV Files to PDF Instantly",
     template: "%s | CSV2PDF",
   },
   description:
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: siteUrl,
     siteName: "CSV2PDF",
-    title: "CSV2PDF - View & Convert CSV Files to PDF Instantly",
+    title: "View & Convert CSV Files to PDF Instantly",
     description:
       "Instantly view, preview, and convert CSV files to beautifully formatted PDFs. Privacy-first, free, and easy to use.",
     images: [
@@ -71,20 +71,12 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [
-      { url: "/favicon/favicon.ico", sizes: "any" },
-      { url: "/favicon/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [
-      { url: "/favicon/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-    other: [
-      { rel: "android-chrome-192x192", url: "/favicon/android-chrome-192x192.png" },
-      { rel: "android-chrome-512x512", url: "/favicon/android-chrome-512x512.png" },
-    ],
+     icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/logo.png", type: "image/png" },
+    ]
   },
-  manifest: "/favicon/site.webmanifest",
+  manifest: "/site.webmanifest",
 };
 
 const geist = Geist({

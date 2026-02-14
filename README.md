@@ -1,10 +1,12 @@
 # CSV2PDF
 
 ## Todo
-    [ ]- seo implementation just like in pushup guide route, seo folder in lib, seo based procedures and schemas (also add llms.txt)
-    [ ]- Launch
+    [ ]- favicon not working 
+    [ ]- pSeo(also add llms.txt)
+    [ ]- fallback for /preview page so it can be indexed properly
+    [ ]- guides 
 
 features later :
  [ ]- editing
- [ ]- blogs 
+
 
