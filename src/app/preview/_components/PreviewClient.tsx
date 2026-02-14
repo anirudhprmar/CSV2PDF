@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import CsvViewer from "~/app/_components/csv-viewer";
 import { getUploadedFile } from "~/lib/csvStorage";
 import { Loader2 } from "lucide-react";
+import { Button } from "~/components/ui/button";
 
 interface PreviewClientProps {
   isAuthenticated: boolean;
@@ -25,8 +26,6 @@ export default function PreviewClient({
         const uploadedFile = await getUploadedFile();
 
         if (!uploadedFile) {
-          // No file found, redirect to home
-          router.push("/");
           return;
         }
 
@@ -60,7 +59,14 @@ export default function PreviewClient({
   }
 
   if (!file) {
-    return null; // Will redirect
+    return (<div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center space-y-4">
+        <p className="text-lg font-medium text-muted-foreground">
+          No file found
+        </p>
+        <Button onClick={() => router.push("/")}>Upload new file</Button>
+      </div>
+    </div>)
   }
 
   return (
