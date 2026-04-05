@@ -2,8 +2,6 @@ import "~/styles/globals.css";
 
 import { type Metadata } from "next";
 import { Geist, DM_Sans } from "next/font/google";
-
-import { TRPCReactProvider } from "~/trpc/react";
 import { cn } from "~/lib/utils";
 import { Providers } from "./providers";
 import { Toaster } from "~/components/ui/sonner";
@@ -90,11 +88,9 @@ export default function RootLayout({
     <html lang="en" className={cn(geist.variable, dmSans.variable)} suppressHydrationWarning>
       <body>
         <Providers>
-          <TRPCReactProvider>
             {children}
               <Analytics />
             <Toaster/>
-          </TRPCReactProvider>
         </Providers>
       </body>
     </html>

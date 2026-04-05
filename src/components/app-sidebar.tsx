@@ -11,7 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
-import { NavSecondary } from "./nav-secondary"
 
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>
@@ -33,7 +32,6 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
       </SidebarHeader>
       <SidebarContent className="flex flex-col justify-between">
         <NavMain/>
-        <NavSecondary className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

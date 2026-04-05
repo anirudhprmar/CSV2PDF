@@ -77,16 +77,6 @@ export default function CsvViewer({
   }, [file]);
 
   const handleSaveToDatabase = async () => {
-    if (!isAuthenticated) {
-      setShowLoginDialog(true);
-      return;
-    }
-
-    if (!hasPurchased) {
-      toast.error("Please upgrade to Premium to save files");
-      router.push("/pricing"); 
-      return;
-    }
 
     setIsSaving(true);
 
@@ -121,16 +111,6 @@ export default function CsvViewer({
   };
 
   const downloadAsPdf = async () => {
-    if (!isAuthenticated) {
-      setShowLoginDialog(true);
-      return;
-    }
-
-    if (!hasPurchased) {
-      toast.error("Please upgrade to Premium to download PDF");
-      router.push("/pricing");
-      return;
-    }
 
     // 4MB limit check
     const MAX_SIZE = 4 * 1024 * 1024;
@@ -192,24 +172,14 @@ export default function CsvViewer({
   };
 
   const handleBack = () => {
-    // If authenticated, go to dashboard; otherwise go to landing page
-    if (isAuthenticated) {
       router.push("/dashboard");
-    } else {
-      onClose();
-    }
   };
 
   const handleClear = async () => {
     try {
       await clearUploadedFile();
       toast.success("File cleared");
-      
-      if (isAuthenticated) {
-        router.push("/dashboard");
-      } else {
-        onClose();
-      }
+      router.push("/dashboard")
     } catch (error) {
       console.error("Failed to clear file:", error);
       toast.error("Failed to clear file");
@@ -306,7 +276,7 @@ export default function CsvViewer({
                   </Button>
                   <Button onClick={handleBack} variant="ghost" size="sm">
                     <ArrowLeft className="mr-2 h-4 w-4" />
-                    {isAuthenticated ? "Back to Dashboard" : "Back to Upload"}
+                    Back to Dashboard
                   </Button>
               </div>
 
@@ -375,12 +345,6 @@ export default function CsvViewer({
           </div>
         </div>
       </div>
-
-      {/* Login Dialog for unauthenticated users */}
-      <LoginDialog 
-        open={showLoginDialog} 
-        onClose={() => setShowLoginDialog(false)} 
-      />
     </div>
   );
 }
