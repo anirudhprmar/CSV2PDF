@@ -24,7 +24,6 @@ import Papa from "papaparse";
 import { fileStorage } from "~/lib/db";
 import { clearUploadedFile } from "~/lib/csvStorage";
 import { toast } from "sonner";
-import LoginDialog from "./login-dialog";
 
 interface CsvViewerProps {
   file: File;
