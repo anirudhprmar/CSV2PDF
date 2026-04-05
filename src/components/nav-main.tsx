@@ -13,9 +13,12 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "~/components/ui/sidebar"
+import { useTheme } from "next-themes"
+import { Button } from "~/components/ui/button"
 
 export function NavMain() {
   const pathname = usePathname()
+  const { setTheme, theme } = useTheme();
 
   return (
     <SidebarGroup>
@@ -44,6 +47,26 @@ export function NavMain() {
                 <LayoutIcon className="h-5 w-5 shrink-0" />
                 <span>{"Dashboard"}</span>
               </Link>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <div className="flex gap-2 px-2 pb-2">
+          <Button
+             size={'sm'}
+            variant={theme === "light" ? "default" : "outline"}
+            onClick={() => setTheme("light")}
+            className="w-fit"
+          >
+            Light
+          </Button>
+          <Button
+            size={'sm'}
+            variant={theme === "dark" ? "default" : "outline"}
+            onClick={() => setTheme("dark")}
+            className="w-fit"
+          >
+            Dark
+          </Button>
+        </div>
             </SidebarMenuItem>
         </SidebarMenu>
       </SidebarGroupContent>

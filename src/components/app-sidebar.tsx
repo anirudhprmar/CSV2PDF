@@ -1,11 +1,9 @@
 import * as React from "react"
 
 import { NavMain } from "~/components/nav-main"
-import { NavUser } from "~/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -33,9 +31,6 @@ export function AppSidebar({ ...props }: AppSidebarProps) {
       <SidebarContent className="flex flex-col justify-between">
         <NavMain/>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
     </Sidebar>
   )
 }
