@@ -18,7 +18,7 @@ export default function FAQs() {
     {
       question: "Is this app free, or what are the in-app purchase options?",
       answer:
-        "The app is free to use with basic feature like viewing your csv files. We offer premium plans for advanced features like saving your files, unlimited csv to pdf conversions, and priority support. Check our pricing section for detailed information about available plans.",
+        "The app is free to use with features like viewing your csv files, saving your files, unlimited csv to pdf conversions.",
     },
     {
       question: "Can the app handle large CSV files without crashing?",
@@ -38,7 +38,7 @@ export default function FAQs() {
   ];
 
   return (
-    <section className="p-5">
+    <section className="p-5" id="faq">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}

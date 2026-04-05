@@ -5,7 +5,6 @@ import Footer from "./_components/footer";
 import FooterCTA from "./_components/footercta";
 import Hero from "./_components/hero";
 import Navbar from "./_components/navbar";
-import Pricing from "./_components/pricing";
 
 export default function Page() {
 
@@ -27,33 +26,6 @@ export default function Page() {
           <div className="h-px w-full absolute border border-dashed bg-linear-to-t from-neutral-300 to-neutral-300 pointer-events-none z-0"/>
         </div>
         <Features/>
-         <div className="relative">
-          <div className="h-px w-full absolute border border-dashed bg-linear-to-t from-neutral-300 to-neutral-300 pointer-events-none z-0"/>
-        </div>
-       
-        <div className="flex flex-col items-center border-b border-dashed py-4">
-          <div className="flex flex-row items-center gap-2 px-6">
-            <div className="flex flex-row items-center">
-              <div className="from-muted h-px w-20 bg-linear-to-l to-transparent sm:w-40">
-              </div>
-              <div className="bg-muted/20 h-1.5 w-1.5 border"></div>
-              </div>
-              <div className="bg-muted/20 jetbrains-mono relative flex h-7 flex-row items-center whitespace-nowrap gap-2 rounded-md border px-4 text-sm font-medium">
-              <span>Pricing</span>
-              </div>
-              <div className="flex flex-row items-center">
-                <div className="bg-muted/20 h-1.5 w-1.5 border">
-                </div>
-                <div className="from-muted h-px w-20 bg-linear-to-r to-transparent sm:w-40"></div>
-                </div>
-          </div>
-        </div>
-
-        <div className="relative">
-          <div className="h-px w-full absolute border border-dashed bg-linear-to-t from-neutral-300 to-neutral-300 pointer-events-none z-0"/>
-        </div>
-
-        <Pricing/>
 
         <div className="relative">
           <div className="h-px w-full absolute border border-dashed bg-linear-to-t from-neutral-300 to-neutral-300 pointer-events-none z-0"/>

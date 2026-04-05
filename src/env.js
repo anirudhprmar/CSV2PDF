@@ -16,12 +16,8 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-      POLAR_ACCESS_TOKEN:z.string(),
-      POLAR_WEBHOOK_SECRET:z.string(),
-      POLAR_SUCCESS_URL:z.string(),
       AUTH_GOOGLE_ID: z.string(),
       AUTH_GOOGLE_SECRET: z.string(),
-      SENTRY_AUTH_TOKEN:z.string()
   },
 
   /**
@@ -32,10 +28,6 @@ export const env = createEnv({
   client: {
     // NEXT_PUBLIC_CLIENTVAR: z.string(), 
     NEXT_PUBLIC_APP_URL: z.string().url(),
-    NEXT_PUBLIC_LIFETIME_ID: z.string(),
-    NEXT_PUBLIC_LIFETIME_SLUG: z.string(),
-    NEXT_PUBLIC_POSTHOG_KEY:z.string(),
-    NEXT_PUBLIC_POSTHOG_HOST:z.string()
   },
 
   /**
@@ -47,17 +39,9 @@ export const env = createEnv({
     BETTER_AUTH_URL:process.env.BETTER_AUTH_URL,
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    POLAR_ACCESS_TOKEN:process.env.POLAR_ACCESS_TOKEN,
-    POLAR_WEBHOOK_SECRET:process.env.POLAR_WEBHOOK_SECRET,
-    POLAR_SUCCESS_URL:process.env.POLAR_SUCCESS_URL,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
     NEXT_PUBLIC_APP_URL:process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_LIFETIME_ID:process.env.NEXT_PUBLIC_LIFETIME_ID,
-    NEXT_PUBLIC_LIFETIME_SLUG:process.env.NEXT_PUBLIC_LIFETIME_SLUG,
-    NEXT_PUBLIC_POSTHOG_KEY:process.env.NEXT_PUBLIC_POSTHOG_KEY,
-    NEXT_PUBLIC_POSTHOG_HOST:process.env.NEXT_PUBLIC_POSTHOG_HOST,
-    SENTRY_AUTH_TOKEN:process.env.SENTRY_AUTH_TOKEN
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

@@ -7,10 +7,9 @@ import { TRPCReactProvider } from "~/trpc/react";
 import { cn } from "~/lib/utils";
 import { Providers } from "./providers";
 import { Toaster } from "~/components/ui/sonner";
-import dynamic from "next/dynamic";
 import { env } from "~/env";
+import { Analytics } from '@vercel/analytics/next';
 
-const PostHogPageView = dynamic(() => import("~/providers/PostHogPageView"), { ssr: true });
 
 const dmSans = DM_Sans({subsets:['latin'],variable:'--font-sans'});
 
@@ -92,8 +91,8 @@ export default function RootLayout({
       <body>
         <Providers>
           <TRPCReactProvider>
-            <PostHogPageView />
             {children}
+              <Analytics />
             <Toaster/>
           </TRPCReactProvider>
         </Providers>

@@ -21,7 +21,6 @@ export default function Navbar() {
           <div className="flex items-center justify-center gap-4 text-md">
             <ul className="hidden md:flex items-center justify-center gap-3 text-muted-foreground">
               {/* <li className="hover:text-foreground cursor-pointer transition-colors">Demo</li> */}
-              <li className="hover:text-foreground cursor-pointer transition-colors">Pricing</li>
               <li className="hover:text-foreground cursor-pointer transition-colors">FAQ&apos;s</li>
               {/* <li className="hover:text-foreground cursor-pointer transition-colors">Blogs</li> */}
             </ul>
