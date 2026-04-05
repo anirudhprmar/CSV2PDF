@@ -7,17 +7,9 @@ export const env = createEnv({
    * isn't built with invalid env vars.
    */
   server: {
-    BETTER_AUTH_SECRET:
-      process.env.NODE_ENV === "production"
-        ? z.string()
-        : z.string().optional(),
-    BETTER_AUTH_URL:z.string().url(),
-    DATABASE_URL: z.string().url(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-      AUTH_GOOGLE_ID: z.string(),
-      AUTH_GOOGLE_SECRET: z.string(),
   },
 
   /**
@@ -25,8 +17,7 @@ export const env = createEnv({
    * isn't built with invalid env vars. To expose them to the client, prefix them with
    * `NEXT_PUBLIC_`.
    */
-  client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(), 
+  client: { 
     NEXT_PUBLIC_APP_URL: z.string().url(),
   },
 
@@ -35,13 +26,8 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
-    BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    BETTER_AUTH_URL:process.env.BETTER_AUTH_URL,
-    DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
-    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
-    NEXT_PUBLIC_APP_URL:process.env.NEXT_PUBLIC_APP_URL,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

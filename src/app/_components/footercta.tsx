@@ -27,7 +27,7 @@ export default function FooterCTA() {
           {/* <Button size="lg" className="text-base shadow-xl">
             Get CSV2PDF
           </Button> */}
-          <Link href={"/login"}>
+          <Link href={"/dashboard"}>
             <Button variant={"default"} size={"lg"} className="text-lg shadow-md tracking-tight">Play with CSVs</Button>
         </Link>
         </motion.div>

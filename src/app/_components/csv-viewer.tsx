@@ -29,15 +29,11 @@ import LoginDialog from "./login-dialog";
 interface CsvViewerProps {
   file: File;
   onClose: () => void;
-  isAuthenticated: boolean;
-  hasPurchased: boolean;
 }
 
 export default function CsvViewer({ 
   file, 
-  onClose, 
-  isAuthenticated, 
-  hasPurchased 
+  onClose,
 }: CsvViewerProps) {
   const router = useRouter();
   const [csvData, setCsvData] = useState<string[][]>([]);

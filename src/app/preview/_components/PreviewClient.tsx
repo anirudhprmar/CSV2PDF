@@ -7,15 +7,8 @@ import { getUploadedFile } from "~/lib/csvStorage";
 import { Loader2 } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
-interface PreviewClientProps {
-  isAuthenticated: boolean;
-  hasPurchased: boolean;
-}
 
-export default function PreviewClient({
-  isAuthenticated,
-  hasPurchased,
-}: PreviewClientProps) {
+export default function PreviewClient() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -74,8 +67,6 @@ export default function PreviewClient({
       <CsvViewer
         file={file}
         onClose={handleBack}
-        isAuthenticated={isAuthenticated}
-        hasPurchased={hasPurchased}
       />
     </div>
   );
